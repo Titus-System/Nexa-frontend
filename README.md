@@ -1,69 +1,48 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Nexa Frontend – Classificação Inteligente, Rápida e Assíncrona
 
-Currently, two official plugins are available:
+O Nexa Frontend é a interface moderna e responsiva para o sistema Nexa, uma solução inovadora para classificação automática de partnumbers e itens industriais. Com integração em tempo real via WebSocket, notificações instantâneas e uma experiência de usuário fluida, o Nexa permite que empresas acelerem processos de classificação, reduzam erros e ganhem produtividade.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Principais Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Classificação Assíncrona:** Submeta partnumbers e acompanhe o progresso em tempo real, sem travar seu fluxo de trabalho.
+- **Notificações Globais:** Receba alertas instantâneos sobre o status da sua classificação, sucesso ou falha, em qualquer página do sistema.
+- **Resultados Detalhados:** Visualize o resultado final da classificação com todos os campos relevantes (NCM, descrição, fabricante, exceções, etc.).
+- **Experiência Moderna:** Interface construída com React, Vite e TypeScript, garantindo performance, escalabilidade e fácil manutenção.
+- **Navegação Intuitiva:** Rotas claras para submissão, acompanhamento e visualização de resultados.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Como Funciona?
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. **Submissão:** Preencha o formulário com o partnumber e dados opcionais.
+2. **Processamento:** O backend Nexa processa sua solicitação de forma assíncrona.
+3. **Acompanhamento:** Acompanhe o status em tempo real via WebSocket.
+4. **Resultado:** Receba o resultado final assim que a classificação for concluída.
+
+---
+
+## Tecnologias Utilizadas
+
+- **React + Vite:** Frontend ultrarrápido e moderno.
+- **TypeScript:** Segurança e produtividade no desenvolvimento.
+- **Socket.IO:** Comunicação em tempo real para feedback instantâneo.
+- **React Context API:** Gerenciamento global de notificações.
+- **TailwindCSS (ou similar):** Visual moderno e responsivo.
+
+---
+
+## Como rodar o projeto
+
+```bash
+# Instale as dependências
+npm install
+
+# Rode o projeto em modo desenvolvimento
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> Certifique-se de que a API Nexa está rodando em http://localhost:5000
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
