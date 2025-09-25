@@ -1,100 +1,42 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
-import { wsService } from "../api/websocket";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function ClassificationPage() {
-    const [formData, setFormData] = useState({
-        description: "",
-        manufacturer: "",
-        supplier: "",
-        partnumber: ""
+const SubmitPage: React.FC = () => {
+  const [form, setForm] = useState({ partnumber: "", description: "", manufacturer: "", supplier: "" });
+  const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch("http://localhost:5000/classify-partnumber", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
     });
 
-    // Handler genérico para atualizar qualquer campo
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log("Dados do formulário:", formData);
-        try {
-            await wsService.startClassificationProcess(formData);
-        } catch (error) {
-            console.error(error);
-        }
+    if (res.ok) {
+      const data = await res.json();
+      navigate(`/result/${data.task_id}`, { state: { room_id: data.room_id } });
+    } else {
+      alert("Erro ao enviar partnumber");
     }
+  };
 
-    return (
-        <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4 w-full max-w-md mx-auto p-4"
-        >
-            <div>
-                <label className="block mb-1 text-sm font-medium text-gray-700">
-                    Descrição do Produto
-                </label>
-                <input
-                    type="text"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="descrição do produto"
-                    className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">Submeter Partnumber</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input className="border p-2 w-full" name="partnumber" placeholder="Partnumber" value={form.partnumber} onChange={handleChange} required />
+        <input className="border p-2 w-full" name="description" placeholder="Descrição" value={form.description} onChange={handleChange} />
+        <input className="border p-2 w-full" name="manufacturer" placeholder="Fabricante" value={form.manufacturer} onChange={handleChange} />
+        <input className="border p-2 w-full" name="supplier" placeholder="Fornecedor" value={form.supplier} onChange={handleChange} />
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Enviar</button>
+      </form>
+    </div>
+  );
+};
 
-            <div>
-                <label className="block mb-1 text-sm font-medium text-gray-700">
-                    Fabricante
-                </label>
-                <input
-                    type="text"
-                    name="manufacturer"
-                    value={formData.manufacturer}
-                    onChange={handleChange}
-                    placeholder="fabricante do produto"
-                    className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-
-            <div>
-                <label className="block mb-1 text-sm font-medium text-gray-700">
-                    Fornecedor
-                </label>
-                <input
-                    type="text"
-                    name="supplier"
-                    value={formData.supplier}
-                    onChange={handleChange}
-                    placeholder="fornecedor do produto"
-                    className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-
-            <div>
-                <label className="block mb-1 text-sm font-medium text-gray-700">
-                    Partnumber
-                </label>
-                <input
-                    type="text"
-                    name="partnumber"
-                    value={formData.partnumber}
-                    onChange={handleChange}
-                    placeholder="partnumber"
-                    className="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-
-            <button
-                type="submit"
-                className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-                Enviar
-            </button>
-        </form>
-    );
-}
+export default SubmitPage;

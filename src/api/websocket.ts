@@ -19,10 +19,12 @@ class WebSocketService {
 
             this.socket.on('connect', () => {
                 console.log(`Conectado ao websocket com ID: ${this.socket!.id}`);
+                toast.success('Conectado ao WebSocket', { duration: 3000, position: 'bottom-right' });
             });
 
             this.socket.on('disconnect', () => {
                 console.log('WebSocket desconectado');
+                toast.error('Desconectado do WebSocket', { duration: 3000, position: 'bottom-right' });
                 this.socket = null;
             });
         }
@@ -63,8 +65,8 @@ class WebSocketService {
         this.socket!.on('classification_finished', (data) => {
             console.log(`FINISHED: ${JSON.stringify(data)}`);
 
-            toast.custom(() => NotificationCard({ roomId: data.room_id, toastId: data.room_id }), {
-                duration: Infinity, // dura 15 segundos
+            toast.custom(() => NotificationCard({ toastId: data.room_id, data }), {
+                duration: Infinity,
                 position: 'bottom-right'
             })
 
