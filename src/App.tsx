@@ -10,9 +10,9 @@ function App() {
   return (
     <BrowserRouter>
   {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
-  <Notifications />
+  <Notifications/>
       <Navbar></Navbar>
-      <main className="main-container bg-background text-text">
+      <main className="main-container text-text pt-[7rem]">
         <MainRouter />
       </main>
       <Footer />
