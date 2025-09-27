@@ -3,7 +3,7 @@ import { faHouse } from "@fortawesome/free-regular-svg-icons";
 
 export default function Footer() {
     return (
-        <div className="bg-[#0F3B57] h-fit w-full flex flex-col justify-center text-white">
+        <div className="bg-[#0F3B57] bottom-0 left-0 right-0 h-fit w-full flex flex-col justify-center text-white">
             <div className="p-8">
                 <img src="/logo_nexa_branco.png" alt="logo_nexa" className="w-[22%]" />
                 <hr className="text-white w-full h-2"></hr>

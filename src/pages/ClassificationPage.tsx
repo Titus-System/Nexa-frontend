@@ -57,8 +57,8 @@ const SubmitPage: React.FC = () => {
             <input className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem]" name="supplier" placeholder="Nome do fornecedor" value={form.supplier} onChange={handleChange} />
           </div>
           <div className="flex justify-end gap-4">
-            <button type="reset" className="rounded-lg font-medium text-base border-1 py-2 px-4 border-[#0F3B57]">Limpar dados</button>
-            <button type="submit" className="bg-[#0F3B57] text-white text-base px-4 py-2 rounded-lg font-bold">
+            <button type="reset" className="rounded-lg font-medium text-base border-1 py-2 px-4 border-[#0F3B57] cursor-pointer">Limpar dados</button>
+            <button type="submit" className="bg-[#0F3B57] text-white text-base px-4 py-2 rounded-lg font-bold cursor-pointer">
               <FontAwesomeIcon icon={faMagnifyingGlass} className="mr-2" />
               Analisar
             </button>
