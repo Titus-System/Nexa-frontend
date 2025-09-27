@@ -12,7 +12,7 @@ function App() {
   {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
   <Notifications/>
       <Navbar></Navbar>
-      <main className="main-container text-text pt-[7rem]">
+      <main className="main-container text-text pt-[7rem] pb-[8rem]">
         <MainRouter />
       </main>
       <Footer />

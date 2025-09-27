@@ -34,7 +34,7 @@ const SubmitPage: React.FC = () => {
         <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Análise de Informações</h1>
         <p className="text-lg">Faça upload do PDF ou insira o Part Number manualmente para classificação fiscal automática.</p>
       </div>
-      <div className="w-[90%]">
+      <div className="w-[75%]">
         <h2 className="font-semibold text-[#010A26] text-2xl mb-7 text-left">Upload de Documento</h2>
         <div className="bg-white h-[20rem] w-[100%] flex justify-center items-center flex-col gap-6 border-2 border-dashed border-[#082640] rounded-xl mb-16">
           <FontAwesomeIcon icon={faArrowUpFromBracket} className="text-[#9799A6] text-[4rem]"/>
@@ -46,7 +46,7 @@ const SubmitPage: React.FC = () => {
         </div>
         <h2 className="font-semibold text-[#010A26] text-2xl text-left mb-7">Entrada Manual</h2>
         <form onSubmit={handleSubmit}>
-          <div className="text-left space-y-4 mb-14">
+          <div className="text-left space-y-4 mb-20">
             <label className="font-medium" htmlFor="partnumber">Part Number *</label>
             <input className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem]" name="partnumber" placeholder="Ex: STM32F407VGT6, LM358N, etc." value={form.partnumber} onChange={handleChange} required />
             <label className="font-medium" htmlFor="partnumber">Descrição (Opcional)</label>
