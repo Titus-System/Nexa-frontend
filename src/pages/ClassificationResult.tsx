@@ -76,15 +76,15 @@ const ClassificationResult: React.FC = () => {
                 <div className="flex flex-col gap-2">
                 <div className="flex flex-row justify-between">
                   <h3 className="text-xl font-medium">NCM:</h3>
-                  {result?.result && (
-                    <p className="text-lg">{result.result.ncm}</p>
-                  )}
+                    <p className="text-lg">
+                      {result?.result?.ncm ? result.result.ncm : "(Não encontrado)"}
+                    </p>
                 </div>
                 <div className="flex flex-row justify-between">
                   <h3 className="text-xl font-medium">Exceção:</h3>
-                  {result?.result && (
-                    <p className="text-lg">{result.result.exception}</p>
-                  )}
+                    <p className="text-lg">
+                      {result?.result?.exception ? result.result.exception : "(Não encontrado)"}
+                    </p>
                 </div>
                 </div>
               </div>
@@ -98,21 +98,21 @@ const ClassificationResult: React.FC = () => {
                 <div className="flex flex-col gap-2">
                 <div className="flex flex-row justify-between">
                   <h3 className="text-xl font-medium">Fabricante:</h3>
-                  {result?.result && (
-                    <p className="text-lg">{result.result.fabricante}</p>
-                  )}
+                    <p className="text-lg">
+                      {result?.result?.fabricante ? result.result.fabricante : "(Não encontrado)"}
+                    </p>
                 </div>
                 <div className="flex flex-row justify-between">
                   <h3 className="text-xl font-medium">País de Origem:</h3>
-                  {result?.result && (
-                    <p className="text-lg">{result.result.pais}</p>
-                  )}
+                    <p className="text-lg">
+                      {result?.result?.pais ? result.result.pais : "(Não encontrado)"}
+                    </p>
                 </div>
                 <div className="flex flex-row justify-between">
                   <h3 className="text-xl font-medium">Endereço:</h3>
-                  {result?.result && (
-                    <p className="text-lg">{result.result.endereco}</p>
-                  )}
+                    <p className="text-lg">
+                      {result?.result?.endereco ? result.result.endereco : "(Não encontrado)"}
+                    </p>
                 </div>
                 </div>
               </div>
@@ -131,9 +131,9 @@ const ClassificationResult: React.FC = () => {
                   </div>
               </div>
               <div className="bg-[#F2F0EB] rounded-lg mb-3 p-4">
-                <p className="text-[#082640] text-left">{result.result.description}</p>  
+                <p className="text-[#082640] text-left">{result?.result?.description ? result.result.description : "(Não encontrado)"}</p>  
               </div> 
-              <p className="text-left text-[#9799A6] text-sm mb-3">Esta descrição foi gerada automaticamente para ser compreensível por um leigo, atendendo aos requisitos da Receita Federal para importação.</p>
+              <p className="text-left text-[#9799A6] text-sm mb-3">{ result?.result?.description ? "Esta descrição foi gerada automaticamente para ser compreensível por um leigo, atendendo aos requisitos da Receita Federal para importação." : "(Não encontrado)"}</p>
             </div>
             )}
         </div>
