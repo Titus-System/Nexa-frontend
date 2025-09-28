@@ -32,7 +32,7 @@ const SubmitPage: React.FC = () => {
     <div className="p-6 flex flex-col justify-center items-center">
       <div className="mb-24">
         <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Análise de Informações</h1>
-        <p className="text-lg">Faça upload do PDF ou insira o Part Number manualmente para classificação fiscal automática.</p>
+        <p className="text-lg text-[#010A26]">Faça upload do PDF ou insira o Part Number manualmente para classificação fiscal automática.</p>
       </div>
       <div className="w-[75%]">
         <h2 className="font-semibold text-[#010A26] text-2xl mb-7 text-left">Upload de Documento</h2>
