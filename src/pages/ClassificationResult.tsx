@@ -61,7 +61,7 @@ const ClassificationResult: React.FC = () => {
                   {result?.result && (
                     <span className="bg-[#F2F0EB] p-2 px-4 rounded-4xl text-sm text-[#0F3B57] font-semibold">{((Number(result.result["confidence_score"]) || 0) * 100).toFixed(2)}% de confiança</span>
                   )}
-                  <p>Analisado em</p>
+                  <p className="text-[#9799A6]">Analisado em 30/09/2025 09:30</p>
                 </div>
               </div>
             </div>
