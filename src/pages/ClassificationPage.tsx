@@ -28,12 +28,28 @@ const SubmitPage: React.FC = () => {
     }
   };
 
+  // const [darkMode, setDarkMode] = useState(false);
+
+  // useEffect(() => {
+  //   if (darkMode) {
+  //     document.body.classList.add("dark-mode");
+  //   } else {
+  //     document.body.classList.remove("dark-mode");
+  //   }
+  // }, [darkMode]);
+
   return (
     <div className="p-6 flex flex-col justify-center items-center">
       <div className="mt-24 mb-24">
         <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Análise de Informações</h1>
         <p className="text-lg text-[#010A26]">Faça upload do PDF ou insira o Part Number manualmente para classificação fiscal automática.</p>
       </div>
+      {/* <button
+        className="bg-[#0F3B57] text-white rounded-lg px-4 py-2 font-medium"
+        onClick={() => setDarkMode(!darkMode)}
+      >
+        {darkMode ? "Modo Claro ☀️" : "Modo Escuro 🌙"}
+      </button> */}
       <div className="w-[75%]">
         <h2 className="font-semibold text-[#010A26] text-2xl mb-7 text-left">Upload de Documento</h2>
         <div className="bg-white h-[20rem] w-[100%] flex justify-center items-center flex-col gap-6 border-2 border-dashed border-[#082640] rounded-xl mb-16">

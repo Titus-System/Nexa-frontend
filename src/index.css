@@ -5,6 +5,10 @@ html, body {
   background-color: #F2F0E9;
 }
 
+.dark-mode {
+  background-color: #010A26;
+}
+
 h1, button {
     font-family: "Montserrat", sans-serif;
 }
@@ -15,6 +19,15 @@ h2, h3 {
 
 h4, h5, p, span, input, label {
     font-family: "Roboto", sans-serif;
+}
+
+.dark-mode h1, .dark-mode h2, .dark-mode h3,
+.dark-mode h4, .dark-mode h5{
+  color: white;
+}
+
+.dark-mode input, .dark-mode textarea{
+  background-color: #182039;
 }
 
 
