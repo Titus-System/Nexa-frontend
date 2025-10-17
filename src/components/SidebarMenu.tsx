@@ -1,6 +1,7 @@
 // SidebarMenu.tsx (TypeScript)
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faBars, faHome, faChartBar, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faXmark, faBars, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { faHouse } from '@fortawesome/free-regular-svg-icons';
 
 type SidebarMenuProps = {
   aberto: boolean;
@@ -20,39 +21,68 @@ export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
 
       {/* Sidebar: acima do overlay com z-60 */}
       <div
-        className={`fixed top-0 left-0 h-full w-[35%] bg-[#0F3B57] text-white shadow-2xl z-60 transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-[38%] bg-white text-white shadow-2xl z-60 transform transition-transform duration-300 ${
           aberto ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-4 bg-[radial-gradient(circle,_#0F3B57_10%,_#010A26_60%)]">
+        <div className="flex flex-col h-full justify-between">
+          <div>
+        <div className="relative flex flex-col py-10 px-7 bg-[radial-gradient(circle,_#0F3B57_10%,_#010A26_60%)]">
+          <FontAwesomeIcon icon={faXmark} className="absolute top-4 right-4 text-2xl text-white cursor-pointer hover:text-gray-300" onClick={onClose}/>
+          <div className="flex flex-row justify-start gap-8">
+            <FontAwesomeIcon icon={faBars} className="text-white text-4xl mt-[0.9rem]" />
             <div className="flex flex-col">
-            <div className="flex flex-row items-center">
-          <FontAwesomeIcon icon={faBars} className="text-white text-4xl"/>
-          <img src="/nexa_texto.png" alt="nexa_texto" className="w-24"/>
+              <img src="/nexa_texto.png" alt="nexa_texto" className="w-24" />
+              <p className="text-white">Sistema de Classificação Fiscal</p>
+            </div>
           </div>
-          <p>Sistema de Classificação Fiscal</p>
-          </div>
-          <FontAwesomeIcon
-            icon={faXmark}
-            className="text-2xl cursor-pointer hover:text-gray-300"
-            onClick={onClose}
-          />
         </div>
-
-        <ul className="mt-6 space-y-4 px-4">
-          <li className="flex items-center gap-3 cursor-pointer hover:bg-[#082640] rounded-lg p-2 transition">
-            <FontAwesomeIcon icon={faHome} />
-            <span>Início</span>
+        <div className="pt-10">
+        <h1 className="text-[#010A26] font-semibold text-3xl text-left pl-8">Ferramentas</h1>
+        <ul className="mt-6 space-y-8">
+          <li className="cursor-pointer">
+            <a className="flex flex-row items-center gap-7 pl-8" href="/">
+              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.4rem]"/>
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-[#010A26] font-medium text-xl">Home</span>
+                <p className="text-[#0F3B57]">Página Inicial</p>
+              </div>
+            </a>
           </li>
-          <li className="flex items-center gap-3 cursor-pointer hover:bg-[#082640] rounded-lg p-2 transition">
-            <FontAwesomeIcon icon={faChartBar} />
-            <span>Relatórios</span>
+          <li className="cursor-pointer">
+            <a className="flex flex-row items-center gap-7 pl-8" href="/classification">
+              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.4rem]"/>
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-[#010A26] font-medium text-xl">Análise de Informações</span>
+                <p className="text-[#0F3B57]">Análise automática de part numbers</p>
+              </div>
+            </a>
           </li>
-          <li className="flex items-center gap-3 cursor-pointer hover:bg-[#082640] rounded-lg p-2 transition">
-            <FontAwesomeIcon icon={faUser} />
-            <span>Perfil</span>
+          <li className="cursor-pointer">
+            <a className="flex flex-row items-center gap-7 pl-8" href="/">
+              <FontAwesomeIcon icon={faClockRotateLeft} className="text-[#010A26] text-[2.4rem]"/>
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-[#010A26] font-medium text-xl">Histórico</span>
+                <p className="text-[#0F3B57]">Análises anteriores</p>
+              </div>
+            </a>
+          </li>
+          <li className="cursor-pointer">
+            <a className="flex flex-row items-center gap-7 pl-8" href="/">
+              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.4rem]"/>
+              <div className="flex flex-col items-start justify-center">
+                <span className="text-[#010A26] font-medium text-xl">Conta</span>
+                <p className="text-[#0F3B57]">Cadastro, login e informações do perfil</p>
+              </div>
+            </a>
           </li>
         </ul>
+        </div>
+        </div>
+        <div className="bg-[#F2F0E9] py-8">
+          <p className="text-[#9799A6]">Criado por <strong>Titus Systems</strong></p>
+        </div>
+        </div>
       </div>
     </>
   );
