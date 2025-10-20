@@ -1,10 +1,10 @@
 // SidebarMenu.tsx (TypeScript)
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faBars, faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
-import { faHouse } from '@fortawesome/free-regular-svg-icons';
+import { faXmark, faBars, faClockRotateLeft, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faUser } from '@fortawesome/free-regular-svg-icons';
 
 type SidebarMenuProps = {
-  aberto: boolean;
+  aberto: boolean;   
   onClose: () => void;
 };
 
@@ -37,39 +37,39 @@ export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
             </div>
           </div>
         </div>
-        <div className="pt-10">
-        <h1 className="text-[#010A26] font-semibold text-3xl text-left pl-8">Ferramentas</h1>
-        <ul className="mt-6 space-y-8">
-          <li className="cursor-pointer">
+        <div className="pt-9">
+        <h1 className="text-[#010A26] font-semibold text-2xl text-left pl-8">Ferramentas</h1>
+        <ul className="mt-6">
+          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
             <a className="flex flex-row items-center gap-7 pl-8" href="/">
-              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.4rem]"/>
+              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.0rem]"/>
               <div className="flex flex-col items-start justify-center">
                 <span className="text-[#010A26] font-medium text-xl">Home</span>
                 <p className="text-[#0F3B57]">Página Inicial</p>
               </div>
             </a>
           </li>
-          <li className="cursor-pointer">
+          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
             <a className="flex flex-row items-center gap-7 pl-8" href="/classification">
-              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.4rem]"/>
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="text-[#010A26] text-[2.0rem]"/>
               <div className="flex flex-col items-start justify-center">
                 <span className="text-[#010A26] font-medium text-xl">Análise de Informações</span>
                 <p className="text-[#0F3B57]">Análise automática de part numbers</p>
               </div>
             </a>
           </li>
-          <li className="cursor-pointer">
-            <a className="flex flex-row items-center gap-7 pl-8" href="/">
-              <FontAwesomeIcon icon={faClockRotateLeft} className="text-[#010A26] text-[2.4rem]"/>
+          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
+            <a className="flex flex-row items-center gap-7 pl-8" href="/history">
+              <FontAwesomeIcon icon={faClockRotateLeft} className="text-[#010A26] text-[2.0rem]"/>
               <div className="flex flex-col items-start justify-center">
                 <span className="text-[#010A26] font-medium text-xl">Histórico</span>
                 <p className="text-[#0F3B57]">Análises anteriores</p>
               </div>
             </a>
           </li>
-          <li className="cursor-pointer">
-            <a className="flex flex-row items-center gap-7 pl-8" href="/">
-              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.4rem]"/>
+          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
+            <a className="flex flex-row items-center gap-7 pl-8" href="/account">
+              <FontAwesomeIcon icon={faUser} className="text-[#010A26] text-[2.0rem]"/>
               <div className="flex flex-col items-start justify-center">
                 <span className="text-[#010A26] font-medium text-xl">Conta</span>
                 <p className="text-[#0F3B57]">Cadastro, login e informações do perfil</p>
@@ -79,7 +79,7 @@ export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
         </ul>
         </div>
         </div>
-        <div className="bg-[#F2F0E9] py-8">
+        <div className="bg-[#F2F0E9] py-6">
           <p className="text-[#9799A6]">Criado por <strong>Titus Systems</strong></p>
         </div>
         </div>

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import type Task from "../types/task";
+import { FetchData } from "../functions/fetchData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartSimple } from "@fortawesome/free-solid-svg-icons";
 
 const HistoryPage: React.FC = () => {
 
@@ -7,41 +10,48 @@ const HistoryPage: React.FC = () => {
     const [error, setError] = useState<Error | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    useEffect(()=>{
-        const fetchData =async ()=> {
-            try {
-                const res = await fetch("http://localhost:5000/tasks", {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                });
-                
-                if (!res.ok) {
-                    throw new Error(`Não foi possível obter o histórico ${res.status}`);
-                }
-                const data = await res.json() as {'tasks': Task[]};
-                setData(data.tasks);
-            } catch(error) {
-                if (error instanceof Error) {
-                    setError(error);
-                    // alert(error)
-                }
-            } finally {
-                setLoading(false);
+    useEffect(() => {
+        async function loadData() {
+        try {
+            const tasks = await FetchData();
+            setData(tasks);
+        } catch (err) {
+            if (err instanceof Error) {
+            setError(err);
             }
-        };
+        } finally {
+            setLoading(false);
+        }
+        }
 
-        fetchData();
-    }, [])
+        loadData();
+    }, []);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>
     return (
-        <div>
-            <h1 className="text-[2.9rem] font-bold mb-6 text-[#010A26]">Histórico de Resultados</h1>
-            <div className="bg-white">
+        <div className="mt-48">
+            <div>
+                <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Histórico de Resultados</h1>
+            </div>
+            <div>
+                <div className="flex flex-row w-full px-10 justify-center gap-6">
+                    <div className="bg-white w-[30%]">
+                        <h2 className="font-semibold text-[#0F3B57]">Total de Análises:</h2>
+                        <FontAwesomeIcon icon={faChartSimple} />
+                    </div>
+                    <div className="bg-white w-[30%]">
+                        <h2>Total de PartNumbers:</h2>
+                    </div>
+                    <div className="bg-white w-[30%]">
+                        <h2>Período das Análises:</h2>
+                    </div>
+                </div>
+            </div>
+            <div>
                 {data ? (
                     data.map((task) => (
-                        <div key={task.id}>
+                        <div key={task.id} className="bg-white">
                             <p>{task.id}</p>
                         </div>
                     ))) : (
