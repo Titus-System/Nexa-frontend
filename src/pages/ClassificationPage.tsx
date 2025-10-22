@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
+import type { UploadResponse, UploadError, UploadSuccess } from "../types/uploadResponse";
 
 const SubmitPage: React.FC = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [form, setForm] = useState({ partnumber: "", description: "", manufacturer: "", supplier: "" });
   const navigate = useNavigate();
+  const [result, setResult] = useState<UploadResponse | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,6 +42,48 @@ const SubmitPage: React.FC = () => {
   //   }
   // }, [darkMode]);
 
+  const handleButtonClick = () => {
+    fileInputRef.current?.click(); // abre o explorador de arquivos
+  };
+
+  const handleUploadFile = async (file: File) => {
+    setSelectedFile(file);
+    if (!file) {
+      alert("Por favor, selecione um arquivo PDF antes de enviar.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("pedido", file);
+
+    try {
+      const response = await fetch("http://192.168.0.110:5000/upload-pdf", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data: UploadResponse = await response.json();
+      setResult(data);
+      console.log(result);
+
+      if (!response.ok) {
+        const errorMessage = (data as UploadError).error || (data as UploadError).message || "Erro desconhecido no servidor";
+        alert(errorMessage);
+        return;
+      }
+
+      const successData = data as UploadSuccess;
+      console.log(successData);
+      console.log("Part Numbers extraídos:", successData.partnumbers);
+      navigate(`/result/${successData.task_id}`, { state: { room_id: successData.room_id } });
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error("Erro no envio:", error.message);
+          alert("Erro de conexão ou falha inesperada.");
+        }
+      }
+  };
+
   return (
     <div className="p-6 flex flex-col justify-center items-center mb-28">
       <div className="mt-48 mb-24 flex flex-col items-center">
@@ -53,13 +99,37 @@ const SubmitPage: React.FC = () => {
       <div className="w-[85%]">
         <div className="bg-white pt-12 pb-20 px-20 rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.15)] flex flex-col justify-center mb-20">
           <h2 className="font-semibold text-[#010A26] text-3xl mb-7 text-left">Upload de Documento</h2>
-          <div className="bg-white h-[20rem] w-[100%] flex justify-center items-center flex-col gap-6 border-2 border-dashed border-[#082640] rounded-xl">
+          <div className="bg-white h-[20rem] w-[100%] flex justify-center items-center flex-col gap-6 border-2 border-dashed border-[#082640] rounded-xl" onDrop={(e) => {e.preventDefault(); const file = e.dataTransfer.files?.[0];
+            if (file && file.type === "application/pdf") {
+              setSelectedFile(file);
+              handleUploadFile(file);
+              } else {
+                alert("Por favor, envie um arquivo PDF válido.");
+              }
+            }}
+            onDragOver={(e) => e.preventDefault()}>
             <FontAwesomeIcon icon={faArrowUpFromBracket} className="flex justify-center items-center text-[#0F3B57] text-[2.8rem] bg-[#F2F0EB] py-[1.4rem] px-[1rem] rounded-[100%]"/>
             <div>
-              <h3 className="text-[#010A26] font-semibold text-lg">Arraste o PDF aqui</h3>
-              <p className="text-[#9799A6]">Ou clique para selecionar arquivo</p>
-            </div>
-            <button className="font-bold text-base bg-[#0F3B57] py-3 px-8 text-white rounded-lg">Selecionar PDF</button>
+              {!selectedFile ? (
+                <>
+                  <h3 className="text-[#010A26] font-semibold text-lg">
+                    Arraste o PDF aqui
+                  </h3>
+                  <p className="text-[#9799A6]">Ou clique para selecionar arquivo</p>
+                </>
+              ) : (
+                <h3 className="text-[#010A26] font-semibold text-lg">
+                  {selectedFile.name}
+                </h3>
+              )}
+          </div>
+            <input type="file" accept="application/pdf" ref={fileInputRef} onChange={(e) => {const file = e.target.files?.[0];
+            if (file) {
+              setSelectedFile(file);
+              handleUploadFile(file);
+            }
+          }} className="hidden"/>
+            <button onClick={handleButtonClick} className="font-bold text-base bg-[#0F3B57] py-3 px-8 text-white rounded-lg">Selecionar PDF</button>
           </div>
         </div>
         </div>
