@@ -9,7 +9,7 @@ export default interface Task {
     current: number;
     total: number;
     message: string;
-    created_at: string;
-    updated_at: string;
+    created_at: Date;
+    updated_at?: Date;
     classifications: Classification[]
 }

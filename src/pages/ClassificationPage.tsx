@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
 import type { UploadResponse, UploadError, UploadSuccess } from "../types/uploadResponse";
+import { API_URL } from "../config";
 
 const SubmitPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,7 +19,7 @@ const SubmitPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:5000/classify-partnumber", {
+    const res = await fetch(`${API_URL}/classify-partnumber`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
@@ -57,10 +58,10 @@ const SubmitPage: React.FC = () => {
     formData.append("pedido", file);
 
     try {
-      const response = await fetch("http://192.168.0.110:5000/upload-pdf", {
+      const response = await fetch(`${API_URL}/upload-pdf`,{
         method: "POST",
         body: formData,
-      });
+      })
 
       const data: UploadResponse = await response.json();
       setResult(data);

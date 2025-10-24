@@ -1,8 +1,9 @@
 import type Task from "../types/task";
+import { API_URL } from "../config";
 
 export async function FetchData(): Promise<Task[]> {
   try {
-    const res = await fetch("http://localhost:5000/tasks", {
+    const res = await fetch(`${API_URL}/tasks`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

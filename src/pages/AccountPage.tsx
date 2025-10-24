@@ -11,18 +11,18 @@ const AccountPage: React.FC = () => {
             </div>
             <div className="flex flex-col items-center">
                 <div className="bg-white w-[93%] rounded-lg shadow-[0_0_60px_rgba(0,0,0,0.15)] px-12 py-9">
-                    <div className="flex flex-row justify-between">
+                    <div className="flex flex-row justify-between mb-14">
                         <h2 className="font-bold text-[#082640] text-3xl underline">Informações Pessoais</h2>
                         <button>
                             <FontAwesomeIcon icon={faPencil} />
                         </button>
                     </div>
-                    <div className="flex flex-col justify-self-start">
-                        <div className="flex flex-row items-center">
-                            <FontAwesomeIcon icon={faUser} />
-                            <label htmlFor="nome-completo">Nome completo</label>
+                    <div className="flex flex-col justify-self-start w-full">
+                        <div className="flex flex-row items-center gap-2">
+                            <FontAwesomeIcon icon={faUser} className="text-2xl text-[#0F3B57]" />
+                            <label htmlFor="nome-completo" className="text-xl font-medium text-[#0F3B57]">Nome completo</label>
                         </div>
-                        <input type="text" name="nome-completo" className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem]" />
+                        <input type="text" name="nome-completo" className="border w-full p-[0.4rem] bg-white border-[#082640] rounded-md mt-[0.6rem] mb-[1.4rem]" />
                         <div className="flex flex-row items-center">
                             <FontAwesomeIcon icon={faAddressCard} />
                             <label htmlFor="cargo-funcao">Cargo/Função</label>

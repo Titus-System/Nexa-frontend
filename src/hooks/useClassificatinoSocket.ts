@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useNotifications } from "../context/NotificationContext";
+import { WEBSOCKET_URL } from "../config";
 
 type StatusUpdate = {
   status: "processing" | "done" | "failed";
@@ -23,7 +24,7 @@ export function useClassificationSocket(roomId: string) {
   const { addNotification } = useNotifications();
 
   useEffect(() => {
-    const s = io("ws://localhost:5000");
+    const s = io(`${WEBSOCKET_URL}`);
 
     s.on("connected", (data) => {
       console.log("Connected with session id:", data.socket_session_id);
