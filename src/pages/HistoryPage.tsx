@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type Task from "../types/task";
 import { FetchData } from "../functions/fetchData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,6 +8,7 @@ import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation
 const HistoryPage: React.FC = () => {
   const [data, setData] = useState<Task[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [expandedTaskId, setExpandedTaskId] = useState<number | string | null>(null);
 
@@ -86,21 +88,56 @@ const HistoryPage: React.FC = () => {
                 ?.map((c) => c.partnumber?.code)
                 .filter((code): code is string => !!code) || [];
 
-                const sortedClassifications = task.classifications
-                ? [...task.classifications].sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    )
-  : [];
+            // === Valores principais ===
+            let confidence = "Não disponível";
+            let ncm = "Não disponível";
+            let exception = "Não disponível";
 
-            const latestClassification = sortedClassifications[0];
+            const isSingle = codes.length === 1;
 
-            const confidence = latestClassification?.confidence_rate !== undefined ? 
-            `${(latestClassification.confidence_rate * 100).toFixed(1)}%`
-            : "Não disponível";
+            if (isSingle) {
+              // Caso de análise única
+              const uniqueClassification = task.classifications?.[0];
+              if (uniqueClassification) {
+                confidence =
+                  uniqueClassification.confidence_rate !== undefined
+                    ? `${(uniqueClassification.confidence_rate * 100).toFixed(
+                        1
+                      )}%`
+                    : "Não disponível";
+                ncm =
+                  uniqueClassification.tipi?.ncm?.code ??
+                  "Não disponível";
+                exception =
+                  uniqueClassification.tipi?.ex ?? "Não disponível";
+              }
+            } else {
+              // Caso de análise múltipla
+              const confidences =
+                task.classifications
+                  ?.map((c) =>
+                    c.confidence_rate !== undefined
+                      ? (c.confidence_rate * 100).toFixed(1)
+                      : null
+                  )
+                  .filter(Boolean) || [];
 
-            const ncm = latestClassification?.tipi?.ncm?.code !== undefined ?
-            `${latestClassification?.tipi?.ncm?.code}` : "Não disponível";
+              const ncms =
+                task.classifications
+                  ?.map((c) => c.tipi?.ncm?.code)
+                  .filter((code): code is string => !!code) || [];
+
+              const exceptions =
+                task.classifications
+                  ?.map((c) => c.tipi?.ex)
+                  .filter((ex): ex is string => !!ex) || [];
+
+              console.log("Task múltipla:", task.id, {
+                ncms,
+                confidences,
+                exceptions
+              });
+            }
 
             // Formata a data da classificação mais recente
             let formattedDate = "Não disponível";
@@ -115,18 +152,16 @@ const HistoryPage: React.FC = () => {
               formattedDate = `${dd}/${mm}/${yyyy} às ${hh}:${min}`;
             }
 
-            const isSingle = codes.length === 1;
-
-            const teskStatus = task.status;
+            const taskStatus = task.status;
             let status = "";
 
-            if (teskStatus == "DONE"){
+            if (taskStatus == "DONE"){
               status = "Sucesso";
             }
-            else if (teskStatus == "PROCESSING"){
+            else if (taskStatus == "PROCESSING"){
               status = "Em andamento";
             }
-            else if (teskStatus == "FAILED"){
+            else if (taskStatus == "FAILED"){
               status = "Falha";
             }
             else {
@@ -139,9 +174,10 @@ const HistoryPage: React.FC = () => {
                 className="relative bg-white mb-4 shadow w-[94.7%] rounded-lg overflow-hidden"
               >
                 <div className="absolute left-0 top-0 bottom-0 w-[1.3rem] rounded-tl-lg rounded-bl-lg"
-  style={{
-    background: "linear-gradient(to bottom, #010A26 20%, #0E4371 50%, #010A26 100%)"
-  }}></div>
+                  style={{
+                    background: "linear-gradient(to bottom, #010A26 20%, #0E4371 50%, #010A26 100%)"
+                  }}>
+                </div>
                 <div className="ml-[1.3rem] w-full pl-9 pr-12 py-5">
                 <div className="flex flex-row items-center justify-between">
                   <div>
@@ -212,7 +248,21 @@ const HistoryPage: React.FC = () => {
                 {/* Seção expandida */}
                 {expandedTaskId === task.id && (
                   <div className="bg-[#F2F0EB] px-12 py-6 border-t border-[#ccc] text-[#0F3B57]">
-                    <p>🔍 Seção expandida — detalhes da task vão aqui futuramente.</p>
+                      <h2>Descrição Detalhada</h2>
+                      <p></p>
+                      <h2>Classificação Fiscal</h2>
+                      <h3>NCM:</h3>
+                      <span>{ncm}</span>
+                      <h3>Alíquota IPI:</h3>
+                      <div className={`text-red-500 ${exception == '00' ? "hidden" : ""}`}>
+                        <h3>Exceção:</h3>
+                        <span></span>
+                      </div>
+                      <h2>Origem e Fabricação</h2>
+                      <h3>Fabricante:</h3>
+                      <h3>País de Origem:</h3>
+                      <h3>Fornecedor:</h3>
+                      <h3>Endereço:</h3>
                   </div>
                 )}
               </div>
