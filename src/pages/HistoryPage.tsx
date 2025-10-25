@@ -3,20 +3,75 @@ import { useNavigate } from "react-router-dom";
 import type Task from "../types/task";
 import { FetchData } from "../functions/fetchData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation, faSpinner, faMagnifyingGlass, faTable, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 
 const HistoryPage: React.FC = () => {
   const [data, setData] = useState<Task[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
+  const [tasksCount, setTasksCount] = useState<number>(0);
+  const [classificationsCount, setClassificationsCount] = useState<number>(0);
+  const [oldestDate, setOldestDate] = useState<string>("Não disponível");
+  const [newestDate, setNewestDate] = useState<string>("Não disponível");
   const [expandedTaskId, setExpandedTaskId] = useState<number | string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenTypes, setIsOpenTypes] = useState(false);
+  const [isOpenStatus, setIsOpenStatus] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("Mais Recentes"); 
+  const options = ["Mais Recentes", "Maior Confiança", "Opção 3"];
+  const [selectedOptionTypes, setSelectedOptionTypes] = useState("Todos os Tipos"); 
+  const optionsTypes = ["Todos os Tipos", "Análises Únicas", "Análises Múltiplas"];
+  const [selectedOptionStatus, setSelectedOptionStatus] = useState("Todos os Status"); 
+  const optionsStatus = ["Todos os Status", "Apenas 'Sucesso'", "Apenas 'Em andamento'", "Apenas 'Falha'"];
+
+  const handleSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsOpen(false); 
+  };
+
+  const handleSelectTypes = (option: string) => {
+    setSelectedOptionTypes(option);
+    setIsOpenTypes(false); 
+  };
+
+  const handleSelectStatus = (option: string) => {
+    setSelectedOptionStatus(option);
+    setIsOpenStatus(false); 
+  };
+
 
   useEffect(() => {
     async function loadData() {
       try {
         const tasks = await FetchData();
         setData(tasks);
+        const quantityTasks = tasks.length;
+        setTasksCount(quantityTasks);
+        const quantityClassifications = tasks.reduce((acc, task) => {
+          return acc + (task.classifications?.length || 0);
+        }, 0);
+      setClassificationsCount(quantityClassifications);
+      if (tasks.length > 0) {
+          // Extrai e ordena as datas válidas
+          const sortedDates = tasks
+            .map((t) => new Date(t.created_at))
+            .filter((d) => !isNaN(d.getTime())) // ignora inválidas
+            .sort((a, b) => a.getTime() - b.getTime()); // crescente
+          if (sortedDates.length > 0) {
+            const oldest = sortedDates[0];
+            const newest = sortedDates[sortedDates.length - 1];
+            // Função auxiliar de formatação
+            const formatDate = (date: Date) => {
+              const dd = String(date.getDate()).padStart(2, "0");
+              const mm = String(date.getMonth() + 1).padStart(2, "0");
+              const yyyy = date.getFullYear();
+              return `${dd}/${mm}/${yyyy}`;
+            };
+            setOldestDate(formatDate(oldest));
+            setNewestDate(formatDate(newest));
+          }
+        }
       } catch (err) {
         if (err instanceof Error) {
           setError(err);
@@ -51,9 +106,9 @@ const HistoryPage: React.FC = () => {
       </div>
 
       {/* Painéis superiores */}
-      <div>
+      <div className="flex flex-col gap-12">
         <div className="flex flex-row w-full px-10 justify-center gap-6">
-          <div className="bg-white w-[33%] rounded-lg border border-solid border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
+          <div className="bg-white w-[33%] rounded-lg border border-solid pb-6 border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
             <div className="flex flex-row justify-between p-3 items-center">
               <h2 className="font-semibold text-[#0F3B57] text-2xl">
                 Total de Análises:
@@ -63,24 +118,154 @@ const HistoryPage: React.FC = () => {
                 className="bg-[#F2F0EB] px-1 py-2 rounded-lg text-2xl text-[#0F3B57]"
               />
             </div>
+            <div className="flex flex-row justify-start px-4 mt-3">
+            <span className="text-3xl font-bold text-[#010A26]">{tasksCount}</span>
+            </div>
           </div>
-          <div className="bg-white w-[33%]">
-            <h2 className="font-semibold text-[#0F3B57] text-2xl">
-              Total de PartNumbers:
-            </h2>
-            <FontAwesomeIcon icon={faChartSimple} />
+          <div className="bg-white w-[33%] rounded-lg border border-solid pb-6 border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
+            <div className="flex flex-row justify-between p-3 items-center">
+              <h2 className="font-semibold text-[#0F3B57] text-2xl">
+                Total de PartNumbers:
+              </h2>
+              <FontAwesomeIcon
+                icon={faTable}
+                className="bg-[#F2F0EB] px-1 py-2 rounded-lg text-2xl text-[#0F3B57]"
+              />
+            </div>
+            <div className="flex flex-row justify-start px-4 mt-3">
+              <span className="text-3xl font-bold text-[#010A26]">{classificationsCount}</span>
+            </div>
           </div>
-          <div className="bg-white w-[33%]">
-            <h2 className="font-semibold text-[#0F3B57] text-2xl">
-              Período das Análises:
-            </h2>
-            <FontAwesomeIcon icon={faChartSimple} />
+          <div className="bg-white w-[33%] rounded-lg border border-solid pb-6 border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
+            <div className="flex flex-row justify-between p-3 items-center">
+              <h2 className="font-semibold text-[#0F3B57] text-2xl">
+                Período das Análises:
+              </h2>
+              <FontAwesomeIcon icon={faCalendarDays} className="bg-[#F2F0EB] px-1 py-2 rounded-lg text-2xl text-[#0F3B57]"/>
+            </div>
+            <div className="flex flex-row justify-start px-4 mt-3">
+              <span className="text-3xl font-bold text-[#010A26]">{oldestDate} - {newestDate}</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-row px-10 items-center justify-between">
+          <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5 w-[35%]">
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-3xl"/>
+            <input className="text-[#9799A6] text-[1.1rem] w-[100%] border-none focus:outline-none focus:ring-0" placeholder="Buscar por Part Number, fabricante, NCM..."></input>
+          </div>
+          <div className="flex flex-row gap-3">
+          {/* Botão do dropdown */}
+          <div className="relative flex justify-center">
+            <div>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 bg-white text-[#0F3B57] font-semibold px-6 py-3 rounded-lg shadow hover:bg-[#f7f7f7] transition"
+              >
+                {selectedOption}
+                <FontAwesomeIcon
+                  icon={faAngleDown}
+                  className={`transition-transform duration-300 ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown */}
+              {isOpen && (
+                <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <ul className="py-2">
+                    {options.map((option) => (
+                      <li
+                        key={option}
+                        onClick={() => handleSelect(option)}
+                        className={`px-4 py-2 cursor-pointer hover:bg-[#F2F0EB] ${
+                          option === selectedOption ? "bg-[#F2F0EB] font-semibold" : ""
+                        }`}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="relative flex justify-center">
+            <div>
+              <button
+                onClick={() => setIsOpenTypes(!isOpenTypes)}
+                className="flex items-center gap-2 bg-white text-[#0F3B57] font-semibold px-6 py-3 rounded-lg shadow hover:bg-[#f7f7f7] transition"
+              >
+                {selectedOptionTypes}
+                <FontAwesomeIcon
+                  icon={faAngleDown}
+                  className={`transition-transform duration-300 ${
+                    isOpenTypes ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown */}
+              {isOpenTypes && (
+                <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <ul className="py-2">
+                    {optionsTypes.map((option) => (
+                      <li
+                        key={option}
+                        onClick={() => handleSelectTypes(option)}
+                        className={`px-4 py-2 cursor-pointer hover:bg-[#F2F0EB] ${
+                          option === selectedOption ? "bg-[#F2F0EB] font-semibold" : ""
+                        }`}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="relative flex justify-center">
+            <div>
+              <button
+                onClick={() => setIsOpenStatus(!isOpenStatus)}
+                className="flex items-center gap-2 bg-white text-[#0F3B57] font-semibold px-6 py-3 rounded-lg shadow hover:bg-[#f7f7f7] transition"
+              >
+                {selectedOptionStatus}
+                <FontAwesomeIcon
+                  icon={faAngleDown}
+                  className={`transition-transform duration-300 ${
+                    isOpenStatus ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown */}
+              {isOpenStatus && (
+                <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                  <ul className="py-2">
+                    {optionsStatus.map((option) => (
+                      <li
+                        key={option}
+                        onClick={() => handleSelectStatus(option)}
+                        className={`px-4 py-2 cursor-pointer hover:bg-[#F2F0EB] ${
+                          option === selectedOption ? "bg-[#F2F0EB] font-semibold" : ""
+                        }`}
+                      >
+                        {option}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
           </div>
         </div>
       </div>
 
       {/* Listagem de Tasks */}
-      <div className="flex flex-col items-center mt-10">
+      <div className="flex flex-col items-center mt-24 gap-3">
         {data && data.length > 0 ? (
           data.map((task) => {
             const codes =
@@ -92,6 +277,11 @@ const HistoryPage: React.FC = () => {
             let confidence = "Não disponível";
             let ncm = "Não disponível";
             let exception = "Não disponível";
+            let tax_rate = "Não disponível";
+            let address = "Não disponível";
+            let country = "Não disponível";
+            let manufacturer = "Não disponível";
+            let description = "Não disponível";
 
             const isSingle = codes.length === 1;
 
@@ -106,10 +296,19 @@ const HistoryPage: React.FC = () => {
                       )}%`
                     : "Não disponível";
                 ncm =
-                  uniqueClassification.tipi?.ncm?.code ??
-                  "Não disponível";
+                  uniqueClassification.tipi?.ncm?.code ?? "Não disponível";
                 exception =
                   uniqueClassification.tipi?.ex ?? "Não disponível";
+                tax_rate =
+                  uniqueClassification.tipi?.tax.toString() ?? "Não disponível";
+                address =
+                  uniqueClassification.manufacturer?.address ?? "Não disponível";
+                country =
+                  uniqueClassification.manufacturer?.country ?? "Não disponível";
+                manufacturer =
+                  uniqueClassification.manufacturer?.name ?? "Não disponível";
+                description =
+                  uniqueClassification.long_description ?? "Não disponível";
               }
             } else {
               // Caso de análise múltipla
@@ -139,7 +338,7 @@ const HistoryPage: React.FC = () => {
               });
             }
 
-            // Formata a data da classificação mais recente
+            // Formata a data da task
             let formattedDate = "Não disponível";
 
             if (task.created_at) {
@@ -184,9 +383,9 @@ const HistoryPage: React.FC = () => {
                   <div className="mb-2 flex flex-row items-center gap-6">
                     {codes.length > 0 ? (
                       <>
-                      {status == "Sucesso" ?
+                      {taskStatus == "DONE" ?
                       <img src="/check-circle.svg" alt="icone_sucesso" className="w-[2.7rem]" /> :
-                      status == "Em andamento" ? 
+                      taskStatus == "PROCESSING" ? 
                       <FontAwesomeIcon icon={faCircleExclamation} /> :
                       <FontAwesomeIcon icon={faSpinner} />
                       };
@@ -213,8 +412,8 @@ const HistoryPage: React.FC = () => {
                       </div>
                       {isSingle && (
                         <div className="flex flex-row">
-                          <h3>Confiança:</h3>
-                          <span>{confidence}</span>
+                          <h3>Alíquota IPI:</h3>
+                          <span>{tax_rate}%</span>
                         </div>
                       )}
                     </div>
@@ -247,22 +446,45 @@ const HistoryPage: React.FC = () => {
                 </div>
                 {/* Seção expandida */}
                 {expandedTaskId === task.id && (
-                  <div className="bg-[#F2F0EB] px-12 py-6 border-t border-[#ccc] text-[#0F3B57]">
-                      <h2>Descrição Detalhada</h2>
-                      <p></p>
-                      <h2>Classificação Fiscal</h2>
-                      <h3>NCM:</h3>
-                      <span>{ncm}</span>
-                      <h3>Alíquota IPI:</h3>
-                      <div className={`text-red-500 ${exception == '00' ? "hidden" : ""}`}>
-                        <h3>Exceção:</h3>
-                        <span></span>
+                  <div className="bg-[#F2F0EB] border-t border-[#ccc] text-[#0F3B57] px-15 py-10">
+                    <div className="flex flex-col gap-4">
+                      <h2 className="font-semibold text-2xl text-left text-[#010A26]">Descrição Detalhada</h2>
+                      <p className="text-left text-[#9799A6] mb-8">{description}</p>
+                    </div>
+                    <div className="flex flex-row justify-between">
+                    <div className="w-[25%]">
+                      <h2 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">Classificação Fiscal</h2>
+                      <div className="flex flex-row text-lg justify-between">
+                        <h3 className="font-medium text-[#010A26]">NCM:</h3>
+                        <span className="text-[#9799A6]">{ncm}</span>
                       </div>
-                      <h2>Origem e Fabricação</h2>
-                      <h3>Fabricante:</h3>
-                      <h3>País de Origem:</h3>
-                      <h3>Fornecedor:</h3>
-                      <h3>Endereço:</h3>
+                      <div className="flex flex-row text-lg justify-between">
+                        <h3 className="font-medium text-[#010A26]">Alíquota IPI:</h3>
+                        <span className="text-[#9799A6]">{tax_rate}%</span>
+                      </div>
+                      <div className={`flex flex-row text-lg justify-between ${exception == '00' ? "hidden" : ""}`}>
+                        <h3 className="font-medium text-[#010A26]">Exceção:</h3>
+                        <span className="text-[#9799A6]">{exception}</span>
+                      </div>
+                    </div>
+                    <div className="w-[25%]">
+                      <h2 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">Origem e Fabricação</h2>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex flex-row text-lg justify-between">
+                          <h3 className="font-medium text-[#010A26] text-left">Fabricante:</h3>
+                          <span className="text-[#9799A6]">{manufacturer}</span>
+                        </div>
+                        <div className="flex flex-row text-lg justify-between">
+                          <h3 className="font-medium text-[#010A26] text-left">País de Origem:</h3>
+                          <span className="text-[#9799A6]">{country}</span>
+                        </div>
+                        <div className="flex flex-row text-lg justify-between">
+                          <h3 className="font-medium text-[#010A26] text-left">Endereço:</h3>
+                          <p className="text-[#9799A6]">{address}</p>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
                   </div>
                 )}
               </div>

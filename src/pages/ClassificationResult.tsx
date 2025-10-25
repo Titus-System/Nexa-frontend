@@ -9,7 +9,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const ClassificationResult: React.FC = () => {
-  // const { taskId } = useParams<{ taskId: string }>();
+  // const { taskId }f = useParams<{ taskId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const roomId = (location.state as { room_id: string })?.room_id;
