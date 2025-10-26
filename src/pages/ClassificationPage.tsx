@@ -27,21 +27,15 @@ const SubmitPage: React.FC = () => {
 
     if (res.ok) {
       const data = await res.json();
+      console.log(`Resposta recebida do servidor: ${JSON.stringify(data)}`)
+      if (!data.job_id){
+        navigate(`/result/${data.task_id}`);  
+      }
       navigate(`/result/${data.task_id}`, { state: { room_id: data.room_id } });
     } else {
       alert("Erro ao enviar partnumber");
     }
   };
-
-  // const [darkMode, setDarkMode] = useState(false);
-
-  // useEffect(() => {
-  //   if (darkMode) {
-  //     document.body.classList.add("dark-mode");
-  //   } else {
-  //     document.body.classList.remove("dark-mode");
-  //   }
-  // }, [darkMode]);
 
   const handleButtonClick = () => {
     fileInputRef.current?.click(); // abre o explorador de arquivos
