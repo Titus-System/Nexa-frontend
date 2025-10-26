@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
 import type { UploadResponse, UploadError, UploadSuccess } from "../types/uploadResponse";
 import { API_URL } from "../config";
+import { useWebSocket } from "../context/WebSocketProvider";
 
 const SubmitPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -12,6 +12,8 @@ const SubmitPage: React.FC = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState<UploadResponse | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const { joinRoom } = useWebSocket();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,6 +29,9 @@ const SubmitPage: React.FC = () => {
 
     if (res.ok) {
       const data = await res.json();
+      if (data.room_id) {
+        joinRoom(data.room_id);
+      }
       navigate(`/result/${data.task_id}`, { state: { room_id: data.room_id } });
     } else {
       alert("Erro ao enviar partnumber");
@@ -76,6 +81,9 @@ const SubmitPage: React.FC = () => {
       const successData = data as UploadSuccess;
       console.log(successData);
       console.log("Part Numbers extraídos:", successData.partnumbers);
+      if (successData.room_id) {
+        joinRoom(successData.room_id);
+      }
       navigate(`/result/${successData.task_id}`, { state: { room_id: successData.room_id } });
       } catch (error) {
         if (error instanceof Error) {

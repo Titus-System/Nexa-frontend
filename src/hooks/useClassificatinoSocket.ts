@@ -46,7 +46,7 @@ export function useClassificationSocket(roomId: string) {
     return () => {
       s.disconnect();
     };
-  }, [roomId]);
+  }, [roomId, addNotification]);
 
   return { socket, status, result };
 }
