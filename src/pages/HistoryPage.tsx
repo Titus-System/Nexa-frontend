@@ -19,7 +19,7 @@ const HistoryPage: React.FC = () => {
   const [isOpenTypes, setIsOpenTypes] = useState(false);
   const [isOpenStatus, setIsOpenStatus] = useState(false);
   const [selectedOption, setSelectedOption] = useState("Mais Recentes"); 
-  const options = ["Mais Recentes", "Maior Confiança", "Opção 3"];
+  const options = ["Mais Recentes", "Maior Confiança"];
   const [selectedOptionTypes, setSelectedOptionTypes] = useState("Todos os Tipos"); 
   const optionsTypes = ["Todos os Tipos", "Análises Únicas", "Análises Múltiplas"];
   const [selectedOptionStatus, setSelectedOptionStatus] = useState("Todos os Status"); 
@@ -331,10 +331,40 @@ const HistoryPage: React.FC = () => {
                   ?.map((c) => c.tipi?.ex)
                   .filter((ex): ex is string => !!ex) || [];
 
+              const tax_rates =
+                task.classifications
+                  ?.map((c) => c.tipi?.tax.toString())
+                  .filter((tax): tax is string => !!tax) || [];
+
+              const countries =
+                task.classifications
+                  ?.map((c) => c.manufacturer?.country)
+                  .filter((country): country is string => !!country) || [];
+
+              const adresses =
+                task.classifications
+                  ?.map((c) => c.manufacturer?.address)
+                  .filter((ad): ad is string => !!ad) || [];
+
+              const manufacturers =
+                task.classifications
+                  ?.map((c) => c.manufacturer?.name)
+                  .filter((manu): manu is string => !!manu) || [];
+
+              const descriptions =
+                task.classifications
+                  ?.map((c) => c.long_description)
+                  .filter((desc): desc is string => !!desc) || [];
+
               console.log("Task múltipla:", task.id, {
                 ncms,
                 confidences,
-                exceptions
+                exceptions,
+                tax_rates,
+                adresses,
+                countries,
+                manufacturers,
+                descriptions
               });
             }
 
@@ -390,7 +420,9 @@ const HistoryPage: React.FC = () => {
                       <FontAwesomeIcon icon={faSpinner} />
                       };
                         <h1 className="text-2xl font-semibold text-[#010A26]">
-                          {codes.join(", ")}
+                          {codes.length > 2
+                            ? `${codes.slice(0, 2).join(", ")}, ...`
+                            : codes.join(", ")}
                         </h1>
                         <span
                           className="text-sm px-7 py-1 font-medium rounded-full text-[#0F3B57] bg-[#F2F0EB]"
@@ -446,47 +478,151 @@ const HistoryPage: React.FC = () => {
                 </div>
                 {/* Seção expandida */}
                 {expandedTaskId === task.id && (
-                  <div className="bg-[#F2F0EB] border-t border-[#ccc] text-[#0F3B57] px-15 py-10">
-                    <div className="flex flex-col gap-4">
-                      <h2 className="font-semibold text-2xl text-left text-[#010A26]">Descrição Detalhada</h2>
-                      <p className="text-left text-[#9799A6] mb-8">{description}</p>
-                    </div>
-                    <div className="flex flex-row justify-between">
-                    <div className="w-[25%]">
-                      <h2 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">Classificação Fiscal</h2>
-                      <div className="flex flex-row text-lg justify-between">
-                        <h3 className="font-medium text-[#010A26]">NCM:</h3>
-                        <span className="text-[#9799A6]">{ncm}</span>
+                <div className="bg-[#F2F0EB] border-t border-[#ccc] text-[#0F3B57] px-15 py-10">
+                  {isSingle ? (
+                    // === Caso de análise única ===
+                    <>
+                      <div className="flex flex-col gap-4">
+                        <h2 className="font-semibold text-2xl text-left text-[#010A26]">
+                          Descrição Detalhada
+                        </h2>
+                        <p className="text-left text-[#9799A6] mb-8">{description}</p>
                       </div>
-                      <div className="flex flex-row text-lg justify-between">
-                        <h3 className="font-medium text-[#010A26]">Alíquota IPI:</h3>
-                        <span className="text-[#9799A6]">{tax_rate}%</span>
-                      </div>
-                      <div className={`flex flex-row text-lg justify-between ${exception == '00' ? "hidden" : ""}`}>
-                        <h3 className="font-medium text-[#010A26]">Exceção:</h3>
-                        <span className="text-[#9799A6]">{exception}</span>
-                      </div>
-                    </div>
-                    <div className="w-[25%]">
-                      <h2 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">Origem e Fabricação</h2>
-                      <div className="flex flex-col gap-3">
-                        <div className="flex flex-row text-lg justify-between">
-                          <h3 className="font-medium text-[#010A26] text-left">Fabricante:</h3>
-                          <span className="text-[#9799A6]">{manufacturer}</span>
+                      <div className="flex flex-row justify-between">
+                        <div className="w-[25%]">
+                          <h2 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">
+                            Classificação Fiscal
+                          </h2>
+                          <div className="flex flex-row text-lg justify-between">
+                            <h3 className="font-medium text-[#010A26]">NCM:</h3>
+                            <span className="text-[#9799A6]">{ncm}</span>
+                          </div>
+                          <div className="flex flex-row text-lg justify-between">
+                            <h3 className="font-medium text-[#010A26]">Alíquota IPI:</h3>
+                            <span className="text-[#9799A6]">{tax_rate}%</span>
+                          </div>
+                          <div
+                            className={`flex flex-row text-lg justify-between ${
+                              exception == "00" ? "hidden" : ""
+                            }`}
+                          >
+                            <h3 className="font-medium text-[#010A26]">Exceção:</h3>
+                            <span className="text-[#9799A6]">{exception}</span>
+                          </div>
                         </div>
-                        <div className="flex flex-row text-lg justify-between">
-                          <h3 className="font-medium text-[#010A26] text-left">País de Origem:</h3>
-                          <span className="text-[#9799A6]">{country}</span>
-                        </div>
-                        <div className="flex flex-row text-lg justify-between">
-                          <h3 className="font-medium text-[#010A26] text-left">Endereço:</h3>
-                          <p className="text-[#9799A6]">{address}</p>
+                        <div className="w-[25%]">
+                          <h2 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">
+                            Origem e Fabricação
+                          </h2>
+                          <div className="flex flex-col gap-3">
+                            <div className="flex flex-row text-lg justify-between">
+                              <h3 className="font-medium text-[#010A26] text-left">
+                                Fabricante:
+                              </h3>
+                              <span className="text-[#9799A6]">{manufacturer}</span>
+                            </div>
+                            <div className="flex flex-row text-lg justify-between">
+                              <h3 className="font-medium text-[#010A26] text-left">
+                                País de Origem:
+                              </h3>
+                              <span className="text-[#9799A6]">{country}</span>
+                            </div>
+                            <div className="flex flex-row text-lg justify-between">
+                              <h3 className="font-medium text-[#010A26] text-left">
+                                Endereço:
+                              </h3>
+                              <p className="text-[#9799A6]">{address}</p>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    </div>
-                  </div>
-                )}
+                    </>
+                  ) : (
+                    // === Caso de análise múltipla ===
+                    <>
+                      {task.classifications?.map((cls, index) => (
+                        <div key={index} className="mb-10 pb-10 border-b border-[#cfcfcf] last:border-none last:pb-0">
+                          <div className="flex flex-col gap-4 mb-4">
+                            <h2 className="font-semibold text-2xl text-left text-[#010A26]">
+                              Partnumber:{" "}
+                              <span className="text-[#9799A6]">
+                                {cls.partnumber?.code ?? "Não disponível"}
+                              </span>
+                            </h2>
+                          </div>
+
+                          <div className="flex flex-col gap-4">
+                            <h3 className="font-semibold text-2xl text-left text-[#010A26]">
+                              Descrição Detalhada
+                            </h3>
+                            <p className="text-left text-[#9799A6] mb-8">
+                              {cls.long_description ?? "Não disponível"}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-row justify-between">
+                            <div className="w-[25%]">
+                              <h3 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">
+                                Classificação Fiscal
+                              </h3>
+                              <div className="flex flex-row text-lg justify-between">
+                                <h3 className="font-medium text-[#010A26]">NCM:</h3>
+                                <span className="text-[#9799A6]">
+                                  {cls.tipi?.ncm?.code ?? "Não disponível"}
+                                </span>
+                              </div>
+                              <div className="flex flex-row text-lg justify-between">
+                                <h3 className="font-medium text-[#010A26]">Alíquota IPI:</h3>
+                                <span className="text-[#9799A6]">
+                                  {cls.tipi?.tax ?? "Não disponível"}%
+                                </span>
+                              </div>
+                              {cls.tipi?.ex && cls.tipi.ex !== "00" && (
+                                <div className="flex flex-row text-lg justify-between">
+                                  <h3 className="font-medium text-[#010A26]">Exceção:</h3>
+                                  <span className="text-[#9799A6]">{cls.tipi.ex}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="w-[25%]">
+                              <h3 className="font-semibold text-2xl text-left mb-4 text-[#010A26]">
+                                Origem e Fabricação
+                              </h3>
+                              <div className="flex flex-col gap-3">
+                                <div className="flex flex-row text-lg justify-between">
+                                  <h3 className="font-medium text-[#010A26] text-left">
+                                    Fabricante:
+                                  </h3>
+                                  <span className="text-[#9799A6]">
+                                    {cls.manufacturer?.name ?? "Não disponível"}
+                                  </span>
+                                </div>
+                                <div className="flex flex-row text-lg justify-between">
+                                  <h3 className="font-medium text-[#010A26] text-left">
+                                    País de Origem:
+                                  </h3>
+                                  <span className="text-[#9799A6]">
+                                    {cls.manufacturer?.country ?? "Não disponível"}
+                                  </span>
+                                </div>
+                                <div className="flex flex-row text-lg justify-between">
+                                  <h3 className="font-medium text-[#010A26] text-left">
+                                    Endereço:
+                                  </h3>
+                                  <p className="text-[#9799A6]">
+                                    {cls.manufacturer?.address ?? "Não disponível"}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
               </div>
             );
           })
