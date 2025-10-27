@@ -9,7 +9,7 @@ import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function Footer() {
     return (
-        <div className="bg-[#0F3B57] bottom-0 left-0 right-0 h-fit w-full flex flex-col justify-center text-white">
+        <div className="bg-[radial-gradient(circle,_#0F3B57_10%,_#010A26_60%)] bottom-0 left-0 right-0 h-fit w-full flex flex-col justify-center text-white">
             <div className="p-8">
                 <img src="/logo_nexa_branco_footer.png" alt="logo_nexa" className="w-[22%]" />
                 <hr className="text-white mb-5 h-2"></hr>
@@ -57,7 +57,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="bg-[#082640] py-4">
+            <div className="bg-[#010A26] py-4">
                 <p className="text-[#D6D8E4]">© 2025 Titus Systems. Todos os direitos reservados.</p>
             </div>
         </div>

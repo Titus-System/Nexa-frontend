@@ -20,7 +20,7 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
   const addNotification = (message: string, type: "info" | "success" | "error" = "info") => {
     const id = crypto.randomUUID();
     setNotifications((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => removeNotification(id), 5000);
+    setTimeout(() => removeNotification(id), 2000);
   };
 
   const removeNotification = (id: string) => {

@@ -4,6 +4,8 @@ import LoginPage from "../pages/LoginPage";
 import ClassificationPage from "../pages/ClassificationPage";
 import ClassificationResult from "../pages/ClassificationResult";
 import SubmitPage from "../pages/ClassificationPage";
+import HistoryPage from "../pages/HistoryPage"
+import AccountPage from "../pages/AccountPage";
 
 
 export default function AppRoutes() {
@@ -16,6 +18,8 @@ export default function AppRoutes() {
             <Route path="/classification" element={<ClassificationPage />} />
             <Route path="/submit" element={<SubmitPage />} />
             <Route path="/result/:taskId" element={<ClassificationResult />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/account" element={<AccountPage />} />
         </Routes>
     );
 }

@@ -1,6 +1,6 @@
 import {io} from 'socket.io-client'
 
-const WEBSOCKET_URL = 'ws://localhost:5000';
+const WEBSOCKET_URL = "ws://127.0.0.1:5000";
 const API_URL = 'http://localhost:5000/classify-partnumber';
 
 const socket = io(WEBSOCKET_URL);
