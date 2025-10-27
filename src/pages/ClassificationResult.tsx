@@ -70,6 +70,14 @@ const ClassificationResult: React.FC = () => {
           </button>
           <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Resultados da Análise</h1>
         </div>
+        {!result ? (
+          <div className="mt-12">
+            <p className="text-lg text-[#010A26]">Buscando descrição do partnumber através da Nexa-IA</p>
+            <p className="text-lg text-[#010A26]">Aguardando atualizações...</p>
+          </div>
+        ) : (
+          <p className="text-lg text-[#010A26]">Classificação fiscal automática concluída</p>
+        )}
       </div>
       <div className="absolute top-6 left-6">
         <button
