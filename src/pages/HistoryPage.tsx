@@ -24,7 +24,7 @@ const HistoryPage: React.FC = () => {
   const optionsTypes = ["Todos os Tipos", "Análises Únicas", "Análises Múltiplas"];
   const [selectedOptionStatus, setSelectedOptionStatus] = useState("Todos os Status"); 
   const optionsStatus = ["Todos os Status", "Apenas 'Sucesso'", "Apenas 'Em andamento'", "Apenas 'Falha'"];
-
+  
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false); 

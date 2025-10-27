@@ -5,6 +5,8 @@ import MainRouter from './routers/mainRouter'
 import Footer from './components/Footer'
 
 import Notifications from './components/Notifications'
+import { NotificationsProvider } from "./context/NotificationContext";
+import { WebSocketProvider } from './context/WebSocketProvider'
 import { useEffect } from 'react'
 
 const ScrollToTop = () => {
@@ -21,17 +23,21 @@ const ScrollToTop = () => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
-      <Notifications />
-      <Navbar></Navbar>
-      <main className="main-container text-text ">
-        <MainRouter />
-      </main>
-      <Footer />
-    </BrowserRouter>
+    <NotificationsProvider>
+      <WebSocketProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          {/* <Toaster position="bottom-right" reverseOrder={false} /> */}
+          <Notifications />
+          <Navbar></Navbar>
+          <main className="main-container text-text ">
+            <MainRouter />
+          </main>
+          <Footer />
+        </BrowserRouter>
+      </WebSocketProvider>
+    </NotificationsProvider>
   )
 }
 
-export default App
+export default App;
