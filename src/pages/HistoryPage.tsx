@@ -3,6 +3,7 @@ import type Task from "../types/task";
 import { FetchData } from "../functions/fetchData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation, faSpinner, faMagnifyingGlass, faTable, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import { downloadExcelByTask } from "../services/downloadExcelService";
 
 const HistoryPage: React.FC = () => {
   const [data, setData] = useState<Task[] | null>(null);
@@ -137,10 +138,28 @@ const HistoryPage: React.FC = () => {
         setLoading(false);
       }
     }
-
+    console.log(data)
     loadData();
-  }, []);
+  }, [data]);
   // console.log(data)
+
+  useEffect(() => {
+  function handleClickOutside(event: MouseEvent) {
+    // Verifica se o clique foi fora do dropdown
+    if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+      setShowFiltersInput(false);
+    }
+  }
+
+  // Adiciona o listener
+  document.addEventListener("mousedown", handleClickOutside);
+
+  // Remove o listener ao desmontar o componente
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [filterRef]);
+
 
   const toggleExpand = (id: number | string) => {
     setExpandedTaskId((prev) => (prev === id ? null : id));
@@ -491,6 +510,10 @@ const HistoryPage: React.FC = () => {
               });
             }
 
+            const downloadExcel = async (taskId:string) => {
+              downloadExcelByTask(task?.id)
+            };
+
             // Formata a data da task
             let formattedDate = "Não disponível";
 
@@ -590,7 +613,7 @@ const HistoryPage: React.FC = () => {
                   </div>
                   </div>
                   <div className="flex flex-row gap-6">
-                    <FontAwesomeIcon icon={faDownload} className="text-3xl"/>
+                    <FontAwesomeIcon icon={faDownload} className="text-3xl cursor-pointer" onClick={() => downloadExcel(task.id)}/>
                     <FontAwesomeIcon icon={faTrashCan} className="text-3xl text-red-500"/>
                     <FontAwesomeIcon
                         icon={faAngleDown}
