@@ -55,40 +55,22 @@ const HistoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-  // Se o filtro selecionado for "Partnumber"
   if (selectedFilterInput === "Partnumber") {
     const searchTerm = inputValue.trim().toLowerCase();
 
-    // Caso o campo esteja vazio → limpa os resultados de busca
     if (searchTerm === "") {
       setSearchResults([]);
       return;
     }
 
-    // Filtra localmente as tasks existentes em `data`
-    const filteredTasks = (data ?? [])
-      .map((task) => ({
-        ...task,
-        classifications:
-          task.classifications?.filter((cls) =>
-            cls.partnumber?.code?.toLowerCase().includes(searchTerm)
-          ) ?? [],
-      }))
-      .filter((task) => task.classifications && task.classifications.length > 0);
+    // Filtra apenas as tasks que contenham o partnumber pesquisado
+    const filteredTasks = (data ?? []).filter((task) =>
+      task.classifications?.some((cls) =>
+        cls.partnumber?.code?.toLowerCase().includes(searchTerm)
+      )
+    );
 
-    const flatTasks = filteredTasks.flatMap((task) => {
-      const clsArr = task.classifications ?? [];
-      if (clsArr.length <= 1) {
-        return task;
-      } else {
-        return clsArr.map((c) => ({
-          ...task,
-          classifications: [c],
-        }));
-      }
-    });
-
-    setSearchResults(flatTasks);
+    setSearchResults(filteredTasks);
   } else {
     setSearchResults([]);
   }
@@ -504,12 +486,15 @@ const HistoryPage: React.FC = () => {
                   <div className="mb-2 flex flex-row items-center gap-6">
                     {codes.length > 0 ? (
                       <>
-                      {taskStatus == "DONE" ?
-                      <img src="/check-circle.svg" alt="icone_sucesso" className="w-[2.7rem]" /> :
-                      taskStatus == "PROCESSING" ? 
-                      <FontAwesomeIcon icon={faCircleExclamation} /> :
-                      <FontAwesomeIcon icon={faSpinner} />
-                      };
+                      {taskStatus === "DONE" ? (
+                        <img src="/check-circle.svg" alt="icone_sucesso" className="w-[2.7rem]" />
+                      ) : taskStatus === "PROCESSING" ? (
+                        <FontAwesomeIcon icon={faSpinner} className="animate-spin text-[#0F3B57]" />
+                      ) : taskStatus === "FAILED" ? (
+                        <FontAwesomeIcon icon={faCircleExclamation} className="text-red-500" />
+                      ) : (
+                        <FontAwesomeIcon icon={faCircleExclamation} className="text-gray-400" />
+                      )};
                         <h1 className="text-2xl font-semibold text-[#010A26]">
                           {codes.length > 2
                             ? `${codes.slice(0, 2).join(", ")}, ...`
