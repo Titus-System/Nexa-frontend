@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import type Task from "../types/task";
 import { FetchData } from "../functions/fetchData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,7 +7,6 @@ import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation
 const HistoryPage: React.FC = () => {
   const [data, setData] = useState<Task[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [tasksCount, setTasksCount] = useState<number>(0);
   const [classificationsCount, setClassificationsCount] = useState<number>(0);
@@ -24,6 +22,11 @@ const HistoryPage: React.FC = () => {
   const optionsTypes = ["Todos os Tipos", "Análises Únicas", "Análises Múltiplas"];
   const [selectedOptionStatus, setSelectedOptionStatus] = useState("Todos os Status"); 
   const optionsStatus = ["Todos os Status", "Apenas 'Sucesso'", "Apenas 'Em andamento'", "Apenas 'Falha'"];
+  const [inputValue, setInputValue] = useState("");
+  const [selectedFilterInput, setSelectedFilterInput] = useState<string | null>(null);
+  const [showFiltersInput, setShowFiltersInput] = useState(false);
+  const optionsFiltersInput = ["Partnumber", "NCM", "Fabricante", "País de origem"];
+  const [searchResults, setSearchResults] = useState<Task[] | null>(null);
   
   const handleSelect = (option: string) => {
     setSelectedOption(option);
@@ -39,6 +42,57 @@ const HistoryPage: React.FC = () => {
     setSelectedOptionStatus(option);
     setIsOpenStatus(false); 
   };
+
+  const handleSelectFilterInput = (filtro: string) => {
+    setSelectedFilterInput(filtro);
+    setShowFiltersInput(true);
+    setInputValue("");
+  };
+
+  const handleRemoveFilter = () => {
+    setSelectedFilterInput(null);
+    setInputValue("");
+  };
+
+  useEffect(() => {
+  // Se o filtro selecionado for "Partnumber"
+  if (selectedFilterInput === "Partnumber") {
+    const searchTerm = inputValue.trim().toLowerCase();
+
+    // Caso o campo esteja vazio → limpa os resultados de busca
+    if (searchTerm === "") {
+      setSearchResults([]);
+      return;
+    }
+
+    // Filtra localmente as tasks existentes em `data`
+    const filteredTasks = (data ?? [])
+      .map((task) => ({
+        ...task,
+        classifications:
+          task.classifications?.filter((cls) =>
+            cls.partnumber?.code?.toLowerCase().includes(searchTerm)
+          ) ?? [],
+      }))
+      .filter((task) => task.classifications && task.classifications.length > 0);
+
+    const flatTasks = filteredTasks.flatMap((task) => {
+      const clsArr = task.classifications ?? [];
+      if (clsArr.length <= 1) {
+        return task;
+      } else {
+        return clsArr.map((c) => ({
+          ...task,
+          classifications: [c],
+        }));
+      }
+    });
+
+    setSearchResults(flatTasks);
+  } else {
+    setSearchResults([]);
+  }
+}, [inputValue, selectedFilterInput, data]);
 
 
   useEffect(() => {
@@ -149,9 +203,35 @@ const HistoryPage: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-row px-10 items-center justify-between">
-          <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5 w-[35%]">
+          <div className="w-[50%] relative">
+            <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5" onClick={() => !selectedFilterInput && setShowFiltersInput(true)}>
             <FontAwesomeIcon icon={faMagnifyingGlass} className="text-3xl"/>
-            <input className="text-[#9799A6] text-[1.1rem] w-[100%] border-none focus:outline-none focus:ring-0" placeholder="Buscar por Part Number, fabricante, NCM..."></input>
+            {selectedFilterInput && (
+              <div className="flex items-center bg-[#F2F0EB] text-[#0F3B57] rounded-full px-3 py-1 text-sm font-medium">
+                {selectedFilterInput}
+                <button
+                  onClick={handleRemoveFilter}
+                  className="ml-2 text-gray-500 hover:text-gray-700"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+            <input type="text" className="text-[#9799A6] text-[1.1rem] w-[100%] border-none focus:outline-none focus:ring-0" placeholder="Buscar por Part Number, fabricante, NCM..." value={inputValue} onChange={(e) => setInputValue(e.target.value)} disabled={!selectedFilterInput}></input>
+          </div>
+          {showFiltersInput && !selectedFilterInput && (
+        <div className="absolute top-full left-0 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-md z-10">
+          {optionsFiltersInput.map((filtro) => (
+            <button
+              key={filtro}
+              onClick={() => handleSelectFilterInput(filtro)}
+              className="w-full text-left px-4 py-2 hover:bg-[#F2F0EB] text-[#0F3B57]"
+            >
+              {filtro}
+            </button>
+          ))}
+        </div>
+      )}
           </div>
           <div className="flex flex-row gap-3">
           {/* Botão do dropdown */}
@@ -266,12 +346,23 @@ const HistoryPage: React.FC = () => {
 
       {/* Listagem de Tasks */}
       <div className="flex flex-col items-center mt-24 gap-3">
-        {data && data.length > 0 ? (
-          data.map((task) => {
-            const codes =
-              task.classifications
-                ?.map((c) => c.partnumber?.code)
-                .filter((code): code is string => !!code) || [];
+        {(() => {
+    const listToRender =
+      searchResults && searchResults.length > 0
+        ? searchResults
+        : data ?? [];
+
+    // Se nenhuma lista tiver itens
+    if (!listToRender || listToRender.length === 0) {
+      return <p>Não há dados disponíveis.</p>;
+    }
+
+    // Caso haja tasks, renderiza normalmente
+    return listToRender.map((task) => {
+      const codes =
+        task.classifications
+          ?.map((c) => c.partnumber?.code)
+          .filter((code): code is string => !!code) || [];
 
             // === Valores principais ===
             let confidence = "Não disponível";
@@ -438,24 +529,24 @@ const HistoryPage: React.FC = () => {
                   </div>
                   <div className="flex flex-col">
                     <div className="flex flex-row gap-4">
-                      <div className="flex flex-row">
+                      <div className="flex flex-row gap-2">
                         <h3>Data:</h3>
                         <span>{formattedDate}</span>
                       </div>
                       {isSingle && (
-                        <div className="flex flex-row">
+                        <div className="flex flex-row gap-2">
                           <h3>Alíquota IPI:</h3>
                           <span>{tax_rate}%</span>
                         </div>
                       )}
                     </div>
                     <div className="flex flex-row gap-4">
-                      <div className="flex flex-row">
+                      <div className="flex flex-row gap-2">
                         <h3>Status:</h3>
                         <span className={status == "Sucesso" ? "text-green-500" : status == "Em andamento" ? "text-[#0F3B57]" : "text-red-500"}>{status}</span>
                       </div>
                       {isSingle && (
-                        <div className="flex flex-row">
+                        <div className="flex flex-row gap-2">
                           <h3>NCM:</h3>
                           <span>{ncm}</span>
                         </div>
@@ -625,10 +716,8 @@ const HistoryPage: React.FC = () => {
               )}
               </div>
             );
-          })
-        ) : (
-          <p>Não há dados disponíveis.</p>
-        )}
+          });
+        })()}
       </div>
     </div>
   );

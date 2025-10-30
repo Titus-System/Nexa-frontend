@@ -3,11 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 
 export const SingleSuccessView = ({ singleResult }: { singleResult: any }) => {
+
     const navigate = useNavigate();
     const dataHora = new Date().toLocaleString('pt-BR', {
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit',
     });
+
+    console.log(singleResult)
 
     return (
         <div className="w-[70%]">
@@ -45,6 +48,12 @@ export const SingleSuccessView = ({ singleResult }: { singleResult: any }) => {
                                     {singleResult?.result?.ncm ? singleResult.result.ncm : "(Não encontrado)"}
                                 </p>
                             </div>
+                            {/* <div className="flex flex-row justify-between">
+                                <h3 className="text-xl font-medium">Alíquota IPI:</h3>
+                                <p className="text-lg">
+                                    {singleResult?.result?.tax ? singleResult.result.tax : "(Não encontrado)"}
+                                </p>
+                            </div> */}
                             <div className="flex flex-row justify-between">
                                 <h3 className="text-xl font-medium">Exceção:</h3>
                                 <p className="text-lg">
