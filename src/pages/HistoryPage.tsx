@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import type Task from "../types/task";
 import { FetchData } from "../functions/fetchData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,7 +27,8 @@ const HistoryPage: React.FC = () => {
   const [showFiltersInput, setShowFiltersInput] = useState(false);
   const optionsFiltersInput = ["Partnumber", "NCM", "Fabricante", "País de origem"];
   const [searchResults, setSearchResults] = useState<Task[] | null>(null);
-  
+  const filterRef = useRef<HTMLDivElement | null>(null);
+ 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false); 
@@ -55,21 +56,45 @@ const HistoryPage: React.FC = () => {
   };
 
   useEffect(() => {
+  const searchTerm = inputValue.trim().toLowerCase();
+
+  // Se o campo estiver vazio → limpa os resultados
+  if (searchTerm === "") {
+    setSearchResults([]);
+    return;
+  }
+
   if (selectedFilterInput === "Partnumber") {
-    const searchTerm = inputValue.trim().toLowerCase();
-
-    if (searchTerm === "") {
-      setSearchResults([]);
-      return;
-    }
-
-    // Filtra apenas as tasks que contenham o partnumber pesquisado
+    // Filtra apenas tasks que contenham o partnumber pesquisado
     const filteredTasks = (data ?? []).filter((task) =>
       task.classifications?.some((cls) =>
         cls.partnumber?.code?.toLowerCase().includes(searchTerm)
       )
     );
-
+    setSearchResults(filteredTasks);
+  } else if (selectedFilterInput === "NCM") {
+    // Filtra apenas tasks que contenham o NCM pesquisado
+    const filteredTasks = (data ?? []).filter((task) =>
+      task.classifications?.some((cls) =>
+        cls.tipi?.ncm?.code?.toLowerCase().includes(searchTerm)
+      )
+    );
+    setSearchResults(filteredTasks);
+  } else if (selectedFilterInput === "Fabricante") {
+    // Filtra apenas tasks que contenham o NCM pesquisado
+    const filteredTasks = (data ?? []).filter((task) =>
+      task.classifications?.some((cls) =>
+        cls.manufacturer?.name.toLowerCase().includes(searchTerm)
+      )
+    );
+    setSearchResults(filteredTasks);
+  } else if (selectedFilterInput === "País de origem") {
+    // Filtra apenas tasks que contenham o NCM pesquisado
+    const filteredTasks = (data ?? []).filter((task) =>
+      task.classifications?.some((cls) =>
+        cls.manufacturer?.country.toLowerCase().includes(searchTerm)
+      )
+    );
     setSearchResults(filteredTasks);
   } else {
     setSearchResults([]);
@@ -185,8 +210,8 @@ const HistoryPage: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-row px-10 items-center justify-between">
-          <div className="w-[50%] relative">
-            <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5" onClick={() => !selectedFilterInput && setShowFiltersInput(true)}>
+          <div className="w-[50%] relative" ref={filterRef}>
+            <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5" onClick={() => !selectedFilterInput && setShowFiltersInput(true) }>
             <FontAwesomeIcon icon={faMagnifyingGlass} className="text-3xl"/>
             {selectedFilterInput && (
               <div className="flex items-center bg-[#F2F0EB] text-[#0F3B57] rounded-full px-3 py-1 text-sm font-medium">
