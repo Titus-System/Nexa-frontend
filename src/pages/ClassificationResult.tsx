@@ -70,7 +70,6 @@ const ClassificationResult: React.FC = () => {
           </button>
           <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Resultados da Análise</h1>
         </div>
-          <p className="text-lg text-[#010A26]">Classificação fiscal automática concluída</p>
       </div>
       <div className="absolute top-6 left-6">
         <button
