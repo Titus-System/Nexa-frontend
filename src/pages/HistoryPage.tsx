@@ -65,7 +65,6 @@ const HistoryPage: React.FC = () => {
   }
 
   if (selectedFilterInput === "Partnumber") {
-    // Filtra apenas tasks que contenham o partnumber pesquisado
     const filteredTasks = (data ?? []).filter((task) =>
       task.classifications?.some((cls) =>
         cls.partnumber?.code?.toLowerCase().includes(searchTerm)
@@ -73,7 +72,6 @@ const HistoryPage: React.FC = () => {
     );
     setSearchResults(filteredTasks);
   } else if (selectedFilterInput === "NCM") {
-    // Filtra apenas tasks que contenham o NCM pesquisado
     const filteredTasks = (data ?? []).filter((task) =>
       task.classifications?.some((cls) =>
         cls.tipi?.ncm?.code?.toLowerCase().includes(searchTerm)
@@ -81,7 +79,6 @@ const HistoryPage: React.FC = () => {
     );
     setSearchResults(filteredTasks);
   } else if (selectedFilterInput === "Fabricante") {
-    // Filtra apenas tasks que contenham o NCM pesquisado
     const filteredTasks = (data ?? []).filter((task) =>
       task.classifications?.some((cls) =>
         cls.manufacturer?.name.toLowerCase().includes(searchTerm)
@@ -89,7 +86,6 @@ const HistoryPage: React.FC = () => {
     );
     setSearchResults(filteredTasks);
   } else if (selectedFilterInput === "País de origem") {
-    // Filtra apenas tasks que contenham o NCM pesquisado
     const filteredTasks = (data ?? []).filter((task) =>
       task.classifications?.some((cls) =>
         cls.manufacturer?.country.toLowerCase().includes(searchTerm)
@@ -144,7 +140,7 @@ const HistoryPage: React.FC = () => {
 
     loadData();
   }, []);
-  console.log(data)
+  // console.log(data)
 
   const toggleExpand = (id: number | string) => {
     setExpandedTaskId((prev) => (prev === id ? null : id));
@@ -365,7 +361,36 @@ const HistoryPage: React.FC = () => {
     }
 
     // Caso haja tasks, renderiza normalmente
-    return listToRender.map((task) => {
+    const filteredTasks = listToRender
+    .filter(task => {
+      if (selectedOptionStatus === "Todos os Status") return true;
+      if (selectedOptionStatus === "Apenas 'Sucesso'") return task.status === "DONE";
+      if (selectedOptionStatus === "Apenas 'Em andamento'") return task.status === "PROCESSING";
+      if (selectedOptionStatus === "Apenas 'Falha'") return task.status === "FAILED";
+      return true;
+    })
+    .filter(task => {
+      const isSingle = (task.classifications?.length ?? 0) === 1;
+      if (selectedOptionTypes === "Todos os Tipos") return true;
+      if (selectedOptionTypes === "Análises Únicas") return isSingle;
+      if (selectedOptionTypes === "Análises Múltiplas") return !isSingle;
+      return true;
+    });
+    if (filteredTasks.length === 0) {
+      return <p>Não há dados disponíveis.</p>;
+    }
+    const sortedTasks = [...filteredTasks].sort((a, b) => {
+      if (selectedOption === "Mais Recentes") {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+      if (selectedOption === "Maior Confiança") {
+        const avgA = a.classifications?.reduce((acc, c) => acc + (c.confidence_rate || 0), 0) / (a.classifications?.length || 1);
+        const avgB = b.classifications?.reduce((acc, c) => acc + (c.confidence_rate || 0), 0) / (b.classifications?.length || 1);
+        return avgB - avgA;
+      }
+      return 0;
+    });
+    return sortedTasks.map(task => {
       const codes =
         task.classifications
           ?.map((c) => c.partnumber?.code)
