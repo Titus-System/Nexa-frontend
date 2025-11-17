@@ -4,6 +4,7 @@ import { FetchData } from "../functions/fetchData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation, faSpinner, faMagnifyingGlass, faTable, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { downloadExcelByTask } from "../services/downloadExcelService";
+import { API_URL } from "../config";
 
 const HistoryPage: React.FC = () => {
   const [data, setData] = useState<Task[] | null>(null);
@@ -100,47 +101,41 @@ const HistoryPage: React.FC = () => {
 
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const tasks = await FetchData();
-        setData(tasks);
-        const quantityTasks = tasks.length;
-        setTasksCount(quantityTasks);
-        const quantityClassifications = tasks.reduce((acc, task) => {
-          return acc + (task.classifications?.length || 0);
-        }, 0);
+  async function loadData() {
+    try {
+      const tasks = await FetchData();
+      setData(tasks);
+      setTasksCount(tasks.length);
+
+      const quantityClassifications = tasks.reduce((acc, task) => {
+        return acc + (task.classifications?.length || 0);
+      }, 0);
       setClassificationsCount(quantityClassifications);
+
       if (tasks.length > 0) {
-          // Extrai e ordena as datas válidas
-          const sortedDates = tasks
-            .map((t) => new Date(t.created_at))
-            .filter((d) => !isNaN(d.getTime())) // ignora inválidas
-            .sort((a, b) => a.getTime() - b.getTime()); // crescente
-          if (sortedDates.length > 0) {
-            const oldest = sortedDates[0];
-            const newest = sortedDates[sortedDates.length - 1];
-            // Função auxiliar de formatação
-            const formatDate = (date: Date) => {
-              const dd = String(date.getDate()).padStart(2, "0");
-              const mm = String(date.getMonth() + 1).padStart(2, "0");
-              const yyyy = date.getFullYear();
-              return `${dd}/${mm}/${yyyy}`;
-            };
-            setOldestDate(formatDate(oldest));
-            setNewestDate(formatDate(newest));
-          }
-        }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err);
-        }
-      } finally {
-        setLoading(false);
+        const sortedDates = tasks
+          .map((t) => new Date(t.created_at))
+          .filter((d) => !isNaN(d.getTime()))
+          .sort((a, b) => a.getTime() - b.getTime());
+
+        const formatDate = (date: Date) =>
+          `${String(date.getDate()).padStart(2, "0")}/${String(
+            date.getMonth() + 1
+          ).padStart(2, "0")}/${date.getFullYear()}`;
+
+        setOldestDate(formatDate(sortedDates[0]));
+        setNewestDate(formatDate(sortedDates[sortedDates.length - 1]));
       }
+    } catch (err) {
+      if (err instanceof Error) setError(err);
+    } finally {
+      setLoading(false);
     }
-    console.log(data)
-    loadData();
-  }, [data]);
+  }
+
+  loadData();
+}, []); // <<< Roda apenas uma vez
+
   // console.log(data)
 
   useEffect(() => {
@@ -167,6 +162,27 @@ const HistoryPage: React.FC = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  const handleDeleteTask = async (taskId: string | number) => {
+    if (!window.confirm("Tem certeza de que deseja excluir esta análise?")) return;
+
+    try {
+      const response = await fetch(`${API_URL}/tasks/${taskId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao deletar a tarefa no servidor.");
+      }
+
+      // Atualiza o estado local (remove a task da lista atual)
+      setData((prev) => prev ? prev.filter((t) => t.id !== taskId) : prev);
+      setTasksCount((prev) => prev - 1);
+    } catch (error) {
+      console.error("Erro ao deletar task:", error);
+      alert("Não foi possível deletar a task.");
+    }
+  };
 
   return (
     <div className="mb-28">
@@ -614,7 +630,7 @@ const HistoryPage: React.FC = () => {
                   </div>
                   <div className="flex flex-row gap-6">
                     <FontAwesomeIcon icon={faDownload} className="text-3xl cursor-pointer" onClick={() => downloadExcel(task.id)}/>
-                    <FontAwesomeIcon icon={faTrashCan} className="text-3xl text-red-500"/>
+                    <FontAwesomeIcon icon={faTrashCan} className="text-3xl text-red-500"onClick={() => handleDeleteTask(task.id)}/>
                     <FontAwesomeIcon
                         icon={faAngleDown}
                         className={`text-3xl cursor-pointer transition-transform duration-300 ${

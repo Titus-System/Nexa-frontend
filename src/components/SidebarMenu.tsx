@@ -1,4 +1,5 @@
 // SidebarMenu.tsx (TypeScript)
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBars, faClockRotateLeft, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faHouse, faUser } from '@fortawesome/free-regular-svg-icons';
@@ -9,6 +10,15 @@ type SidebarMenuProps = {
 };
 
 export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
+  const [darkMode] = useState(false);
+    useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
+
   return (
     <>
       {/* Overlay: agora com z-50 e cor rgba (ajuste opacidade como quiser) */}
@@ -25,7 +35,7 @@ export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
           aberto ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full justify-between">
+        <div className={`${darkMode ? "bg-[#0B192E]" : "bg-white"} flex flex-col h-full justify-between`}>
           <div>
         <div className="relative flex flex-col py-10 px-7 bg-[radial-gradient(circle,_#0F3B57_10%,_#010A26_60%)]">
           <FontAwesomeIcon icon={faXmark} className="absolute top-4 right-4 text-2xl text-white cursor-pointer hover:text-gray-300" onClick={onClose}/>
@@ -38,49 +48,49 @@ export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
           </div>
         </div>
         <div className="pt-9">
-        <h1 className="text-[#010A26] font-semibold text-2xl text-left pl-8">Ferramentas</h1>
+        <h1 className={`${darkMode ? "text-white" : "text-[#010A26]"} font-semibold text-2xl text-left pl-8`}>Ferramentas</h1>
         <ul className="mt-6">
-          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
+          <li className={`cursor-pointer ${darkMode? "hover:bg-[#0E2B47]" : "hover:bg-[#F2F0E9]"} transition duration-200 py-4`}>
             <a className="flex flex-row items-center gap-7 pl-8" href="/">
-              <FontAwesomeIcon icon={faHouse} className="text-[#010A26] text-[2.0rem]"/>
+              <FontAwesomeIcon icon={faHouse} className={`${darkMode ? "text-white" : "text-[#010A26]"} text-[2.0rem]`}/>
               <div className="flex flex-col items-start justify-center">
-                <span className="text-[#010A26] font-medium text-xl">Home</span>
-                <p className="text-[#0F3B57]">Página Inicial</p>
+                <span className={`${darkMode ? "text-white" : "text-[#010A26]"} font-medium text-xl`}>Home</span>
+                <p className={`${darkMode ? "text-[#9799A6]" : "text-[#0F3B57]"}`}>Página Inicial</p>
               </div>
             </a>
           </li>
-          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
+          <li className={`cursor-pointer ${darkMode? "hover:bg-[#0E2B47]" : "hover:bg-[#F2F0E9]"} transition duration-200 py-4`}>
             <a className="flex flex-row items-center gap-7 pl-8" href="/classification">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="text-[#010A26] text-[2.0rem]"/>
+              <FontAwesomeIcon icon={faMagnifyingGlass} className={`${darkMode ? "text-white" : "text-[#010A26]"} text-[2.0rem]`}/>
               <div className="flex flex-col items-start justify-center">
-                <span className="text-[#010A26] font-medium text-xl">Análise de Informações</span>
-                <p className="text-[#0F3B57]">Análise automática de part numbers</p>
+                <span className={`${darkMode ? "text-white" : "text-[#010A26]"} font-medium text-xl`}>Análise de Informações</span>
+                <p className={`${darkMode ? "text-[#9799A6]" : "text-[#0F3B57]"}`}>Análise automática de part numbers</p>
               </div>
             </a>
           </li>
-          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
+          <li className={`cursor-pointer ${darkMode? "hover:bg-[#0E2B47]" : "hover:bg-[#F2F0E9]"} transition duration-200 py-4`}>
             <a className="flex flex-row items-center gap-7 pl-8" href="/history">
-              <FontAwesomeIcon icon={faClockRotateLeft} className="text-[#010A26] text-[2.0rem]"/>
+              <FontAwesomeIcon icon={faClockRotateLeft} className={`${darkMode ? "text-white" : "text-[#010A26]"} text-[2.0rem]`}/>
               <div className="flex flex-col items-start justify-center">
-                <span className="text-[#010A26] font-medium text-xl">Histórico</span>
-                <p className="text-[#0F3B57]">Análises anteriores</p>
+                <span className={`${darkMode ? "text-white" : "text-[#010A26]"} font-medium text-xl`}>Histórico</span>
+                <p className={`${darkMode ? "text-[#9799A6]" : "text-[#0F3B57]"}`}>Análises anteriores</p>
               </div>
             </a>
           </li>
-          <li className="cursor-pointer hover:bg-[#F2F0E9] transition duration-200 py-4">
+          <li className={`cursor-pointer ${darkMode? "hover:bg-[#0E2B47]" : "hover:bg-[#F2F0E9]"} transition duration-200 py-4`}>
             <a className="flex flex-row items-center gap-7 pl-8" href="/account">
-              <FontAwesomeIcon icon={faUser} className="text-[#010A26] text-[2.0rem]"/>
+              <FontAwesomeIcon icon={faUser} className={`${darkMode ? "text-white" : "text-[#010A26]"} text-[2.0rem]`}/>
               <div className="flex flex-col items-start justify-center">
-                <span className="text-[#010A26] font-medium text-xl">Conta</span>
-                <p className="text-[#0F3B57]">Cadastro, login e informações do perfil</p>
+                <span className={`${darkMode ? "text-white" : "text-[#010A26]"} font-medium text-xl`}>Conta</span>
+                <p className={`${darkMode ? "text-[#9799A6]" : "text-[#0F3B57]"}`}>Cadastro, login e informações do perfil</p>
               </div>
             </a>
           </li>
         </ul>
         </div>
         </div>
-        <div className="bg-[#F2F0E9] py-6">
-          <p className="text-[#9799A6]">Criado por <strong>Titus Systems</strong></p>
+        <div className={`${darkMode ? "bg-[#0E2B47]" : "bg-[#F2F0E9]"} py-6`}>
+          <p className="text-[#9799A6]">Criado por <strong><a href="https://github.com/Titus-System" target="_blank">Titus Systems</a></strong></p>
         </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { faCopy, faFileExcel, faMagnifyingGlass, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
+import { downloadExcelByTask } from "../services/downloadExcelService";
 
 export const SingleSuccessView = ({ singleResult }: { singleResult: any }) => {
 
@@ -11,6 +12,10 @@ export const SingleSuccessView = ({ singleResult }: { singleResult: any }) => {
     });
 
     console.log(singleResult)
+
+    const downloadExcel = async (taskId:string) => {
+        downloadExcelByTask(taskId)
+    };
 
     return (
         <div className="w-[70%]">
@@ -113,7 +118,7 @@ export const SingleSuccessView = ({ singleResult }: { singleResult: any }) => {
             </div>
             <div className="flex flex-row justify-end gap-4">
                 <button className="bg-[#0F3B57] text-white text-base px-4 py-2 rounded-lg font-bold cursor-pointer">
-                    <FontAwesomeIcon icon={faFileExcel} className="mr-2" />
+                    <FontAwesomeIcon icon={faFileExcel} className="mr-2"/>
                     Exportar para Excel
                 </button>
                 <button className="bg-[#0F3B57] text-white text-base px-4 py-2 rounded-lg font-bold cursor-pointer"
