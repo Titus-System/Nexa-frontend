@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "../context/useAuth";
 
 type ThemeContextType = {
   darkMode: boolean;
@@ -13,6 +14,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem("darkMode");
     return saved === "true";
   });
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (!user) {
+      setDarkMode(false);
+      localStorage.setItem("darkMode", "false");
+      document.body.classList.remove("dark-mode");
+    }
+  }, [user]);
 
   useEffect(() => {
     // Aplica ao <body>

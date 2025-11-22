@@ -11,11 +11,11 @@ import { ThemeProvider } from './context/ThemeContext.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <NotificationsProvider>
-      <ThemeProvider>
         <AuthProvider>
-          <App />
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
         </AuthProvider>
-      </ThemeProvider>
     </NotificationsProvider>
   </StrictMode>,
 );

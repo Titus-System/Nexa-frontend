@@ -6,6 +6,7 @@ import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
     return (
@@ -24,15 +25,15 @@ export default function Footer() {
                                 <FontAwesomeIcon icon={faHouse} className="text-xl"/>
                                 <p className="text-lg">Home</p>
                             </a>
-                            <a href="/classification" className="flex flex-row items-center gap-3">
+                            <Link to="/classification" className="flex flex-row items-center gap-3">
                                 <FontAwesomeIcon icon={faMagnifyingGlass} className="text-xl"/>
                                 <p className="text-lg w-[100%]">Análise de Informações</p>
-                            </a>
-                            <a href="/" className="flex flex-row items-center gap-3">
+                            </Link>
+                            <a href="/history" className="flex flex-row items-center gap-3">
                                 <FontAwesomeIcon icon={faClockRotateLeft} className="text-xl"/>
                                 <p className="text-lg">Histórico</p>
                             </a>
-                            <a href="/" className="flex flex-row items-center gap-3">
+                            <a href="/account" className="flex flex-row items-center gap-3">
                                 <FontAwesomeIcon icon={faUser} className="text-xl"/>
                                 <p className="text-lg">Conta</p>
                             </a>

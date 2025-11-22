@@ -3,9 +3,12 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
 import SidebarMenu from "./SidebarMenu";
+import { useAuth } from "../context/useAuth";
+import { Link } from "react-router-dom";
 
 export default function NavBar() {
   const [menuAberto, setMenuAberto] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
@@ -24,10 +27,29 @@ export default function NavBar() {
           <img src="/logo_nexa_branco.png" alt="logo_nexa" className="w-[22%] object-contain" />
         </a>
 
-        <FontAwesomeIcon
-          icon={faUser}
-          className="text-white text-4xl cursor-pointer hover:opacity-80 transition"
-        />
+        {user ? (
+          <FontAwesomeIcon
+            icon={faUser}
+            className="text-white text-4xl cursor-pointer hover:opacity-80 transition"
+            onClick={() => (window.location.href = "/account")}
+          />
+        ) : (
+          <div className="text-white text-lg flex gap-2">
+            <Link
+              to="/login?mode=login"
+              className="hover:opacity-80 transition"
+            >
+              Login
+            </Link>
+            <span>|</span>
+            <Link
+              to="/login?mode=cadastro"
+              className="hover:opacity-80 transition"
+            >
+              Cadastro
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Menu lateral (overlay + sidebar) */}

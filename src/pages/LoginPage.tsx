@@ -1,9 +1,12 @@
+import { useSearchParams } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/useAuth';
 
 const LoginPage: React.FC = () => {
-  const [switchMode, setSwitchMode] = useState("login"); 
+  const [searchParams] = useSearchParams();
+  const initialMode = searchParams.get("mode") === "cadastro" ? "cadastro" : "login";
+  const [switchMode, setSwitchMode] = useState(initialMode);
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -13,6 +16,15 @@ const LoginPage: React.FC = () => {
       document.body.classList.remove("dark-mode");
     }
   }, [darkMode]);
+
+  useEffect(() => {
+  const mode = searchParams.get("mode");
+  if (mode === "cadastro") {
+    setSwitchMode("cadastro");
+  } else if (mode === "login") {
+    setSwitchMode("login");
+  }
+}, [searchParams]);
 
   return (
     <div className={`p-6 flex flex-col justify-center items-center mb-28 ${darkMode ? "dark-mode" : ""}`}>

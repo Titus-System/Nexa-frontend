@@ -1,4 +1,3 @@
-// SidebarMenu.tsx (TypeScript)
 import { useTheme } from "../context/ThemeContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBars, faClockRotateLeft, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -24,9 +23,11 @@ export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
 
       {/* Sidebar: acima do overlay com z-60 */}
       <div
-        className={`fixed top-0 left-0 h-full w-[38%] bg-white text-white shadow-2xl z-60 transform transition-transform duration-300 ${
-          aberto ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`
+          fixed top-0 left-0 h-full w-[38%] bg-white text-white 
+          shadow-2xl z-60 transform transition-transform duration-300
+          ${aberto ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"}
+        `}
       >
         <div className={`${darkMode ? "bg-[#0B192E]" : "bg-white"} flex flex-col h-full justify-between`}>
           <div>
