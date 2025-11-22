@@ -1,24 +1,40 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
-import { AuthContext } from './AuthContextValue';
+import { AuthContext, type User } from './AuthContextValue';
 
 // Provedor do contexto de autenticação
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem("token");
+  });
 
-  // Função de login (placeholder)
-  const login = () => {
-    // Implementar lógica de autenticação futuramente
-    setIsAuthenticated(true);
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const isAuthenticated = !!token;
+
+  // Função de login
+  const login = (token: string, user: User) => {
+    setToken(token);
+    setUser(user);
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
-  // Função de logout (placeholder)
+  // Função de logout
   const logout = () => {
-    setIsAuthenticated(false);
+    setToken(null);
+    setUser(null);
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, token, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

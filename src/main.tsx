@@ -6,13 +6,16 @@ import App from './App.tsx';
 
 import { NotificationsProvider } from './context/NotificationContext';
 import { AuthProvider } from './context/AuthContext.tsx';
+import { ThemeProvider } from './context/ThemeContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <NotificationsProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </ThemeProvider>
     </NotificationsProvider>
   </StrictMode>,
 );

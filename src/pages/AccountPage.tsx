@@ -1,8 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faEnvelope, faUser, faAddressCard } from "@fortawesome/free-regular-svg-icons";
+import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "../context/ThemeContext";
 
 const AccountPage: React.FC = () => {
+    const { darkMode, toggleTheme } = useTheme();
     return (
         <div className="relative w-full mb-28">
             <div className="mt-[3.5rem]">
@@ -45,6 +48,10 @@ const AccountPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <button onClick={toggleTheme} className={`relative w-16 h-8 rounded-full flex items-center transition-colors duration-300 ${darkMode ? "bg-[#0F3B56]" : "bg-[#FEDA60]"}`}>
+                <FontAwesomeIcon icon={darkMode ? faMoon : faSun} className={`absolute text-white transition-all duration-300 ${darkMode ? "left-2" : "right-2"}`}/>
+                <div className={`absolute bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${darkMode ? "translate-x-0 left-1" : "translate-x-8"}`}></div>
+            </button>
         </div>
     );
 };

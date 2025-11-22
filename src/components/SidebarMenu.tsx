@@ -1,5 +1,5 @@
 // SidebarMenu.tsx (TypeScript)
-import React, { useState, useEffect } from "react";
+import { useTheme } from "../context/ThemeContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faBars, faClockRotateLeft, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { faHouse, faUser } from '@fortawesome/free-regular-svg-icons';
@@ -10,14 +10,7 @@ type SidebarMenuProps = {
 };
 
 export default function SidebarMenu({ aberto, onClose }: SidebarMenuProps) {
-  const [darkMode] = useState(false);
-    useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, [darkMode]);
+  const { darkMode } = useTheme();
 
   return (
     <>

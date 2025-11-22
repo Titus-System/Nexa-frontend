@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
 import type { UploadResponse, UploadError, UploadSuccess } from "../types/uploadResponse";
 import { API_URL } from "../config";
 import { useWebSocket } from "../context/WebSocketProvider";
+import { useTheme } from "../context/ThemeContext";
 
 const SubmitPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -12,7 +13,7 @@ const SubmitPage: React.FC = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState<UploadResponse | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode } = useTheme();
 
   const { joinRoom } = useWebSocket();
 
@@ -39,14 +40,6 @@ const SubmitPage: React.FC = () => {
       alert("Erro ao enviar partnumber");
     }
   };
-
-  useEffect(() => {
-  if (darkMode) {
-    document.body.classList.add("dark-mode");
-  } else {
-    document.body.classList.remove("dark-mode");
-  }
-}, [darkMode]);
 
   const handleButtonClick = () => {
     fileInputRef.current?.click(); // abre o explorador de arquivos
@@ -99,16 +92,10 @@ const SubmitPage: React.FC = () => {
         <h1 className="text-[2.9rem] font-bold mb-6 text-[#010A26]">Análise de Informações</h1>
         <p className="text-xl text-[#9799A6] w-[60%]">Faça upload do PDF ou insira o Part Number manualmente para classificação fiscal automática. Reduza erros e garanta conformidade total com a Receita Federal.</p>
       </div>
-      <button
-        className="bg-[#0F3B57] text-white rounded-lg px-4 py-2 font-medium"
-        onClick={() => setDarkMode(!darkMode)}
-      >
-        {darkMode ? "Modo Claro ☀️" : "Modo Escuro 🌙"}
-      </button> 
       <div className={`w-[85%]`}>
         <div className={`${darkMode ? "bg-[#1E263D] border-1 border-white" : "bg-white" } pt-12 pb-20 px-20 rounded-xl shadow-[0_0_60px_rgba(0,0,0,0.15)] flex flex-col justify-center mb-20`}>
           <h2 className={`font-semibold ${darkMode ? "text-white" : "text-[#010A26]" } text-3xl mb-7 text-left`}>Upload de Documento</h2>
-          <div className={` ${darkMode ? "bg-[#182039]" : "bg-white" } h-[20rem] w-[100%] flex justify-center items-center flex-col gap-6 border-2 border-dashed border-[#082640] rounded-xl`} onDrop={(e) => {e.preventDefault(); const file = e.dataTransfer.files?.[0];
+          <div className={` ${darkMode ? "bg-[#182039] border-white" : "bg-white" } h-[20rem] w-[100%] flex justify-center items-center flex-col gap-6 border-2 border-dashed border-[#082640] rounded-xl`} onDrop={(e) => {e.preventDefault(); const file = e.dataTransfer.files?.[0];
             if (file && file.type === "application/pdf") {
               setSelectedFile(file);
               handleUploadFile(file);
@@ -151,13 +138,13 @@ const SubmitPage: React.FC = () => {
           <div className="pt-12 pb-20 flex flex-col justify-center w-full">
             <form onSubmit={handleSubmit} className="w-full">
               {/* Caixa branca ocupa toda a largura */}
-              <div className="bg-white shadow-[0_0_60px_rgba(0,0,0,0.15)] rounded-xl p-10 mb-10 w-full">
+              <div className={`${darkMode ? "bg-[#1E263D] border-1 border-white" : "bg-white"} shadow-[0_0_60px_rgba(0,0,0,0.15)] rounded-xl p-10 mb-10 w-full`}>
                 <h2 className="font-semibold text-[#010A26] text-2xl text-left mb-7">Entrada Manual</h2>
 
                 <div className="text-left space-y-4">
-                  <label className="font-medium" htmlFor="partnumber">Part Number *</label>
+                  <label className={`font-medium ${darkMode ? "text-white" : ""}`} htmlFor="partnumber">Part Number *</label>
                   <input
-                    className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem]"
+                    className={`border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem] ${darkMode ? "text-white placeholder-grey-300 border-1 border-white" : ""}`}
                     name="partnumber"
                     placeholder="Ex: STM32F407VGT6, LM358N, etc."
                     value={form.partnumber}
@@ -165,27 +152,27 @@ const SubmitPage: React.FC = () => {
                     required
                   />
 
-                  <label className="font-medium" htmlFor="description">Descrição (Opcional)</label>
+                  <label className={`font-medium ${darkMode ? "text-white" : ""}`} htmlFor="description">Descrição (Opcional)</label>
                   <textarea
-                    className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem] h-30 resize-none"
+                    className={`border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem] h-30 resize-none ${darkMode ? "text-white placeholder-grey-300 border-1 border-white" : ""}`}
                     name="description"
                     placeholder="Descrição adicional do componente"
                     value={form.description}
                     onChange={handleChange}
                   />
 
-                  <label className="font-medium" htmlFor="manufacturer">Fabricante (Opcional)</label>
+                  <label className={`font-medium ${darkMode ? "text-white" : ""}`} htmlFor="manufacturer">Fabricante (Opcional)</label>
                   <input
-                    className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem]"
+                    className={`border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem] ${darkMode ? "text-white placeholder-grey-300 border-1 border-white" : ""}`}
                     name="manufacturer"
                     placeholder="Nome do fabricante"
                     value={form.manufacturer}
                     onChange={handleChange}
                   />
 
-                  <label className="font-medium" htmlFor="supplier">Fornecedor (Opcional)</label>
+                  <label className={`font-medium ${darkMode ? "text-white" : ""}`} htmlFor="supplier">Fornecedor (Opcional)</label>
                   <input
-                    className="border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem]"
+                    className={`border p-2 w-full bg-white border-[#082640] rounded-md mt-[0.6rem] ${darkMode ? "text-white placeholder-grey-300 border-1 border-white" : ""}`}
                     name="supplier"
                     placeholder="Nome do fornecedor"
                     value={form.supplier}

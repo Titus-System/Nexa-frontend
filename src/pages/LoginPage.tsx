@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/useAuth';
 
 const LoginPage: React.FC = () => {
   const [switchMode, setSwitchMode] = useState("login"); 
   const [darkMode, setDarkMode] = useState(false);
-  const { login } = useAuth();
 
   useEffect(() => {
     if (darkMode) {
@@ -58,58 +58,136 @@ const LoginPage: React.FC = () => {
 };
 
 function LoginForm() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+    const email = form.email_login.value.trim();
+    const password = form.senha_login.value;
+
+    const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      console.log("ERRO DO BACKEND:", error);
+      alert(JSON.stringify(error, null, 2));
+      return;
+    }
+    const data = await res.json();
+
+    login(data.access_token, data.user);
+    navigate("/account");
+
+  }
   return (
-    <form>
+    <form className="flex flex-col justify-center items-center gap-4 w-full" onSubmit={handleLogin}>
+      <br />
+      <div className="w-full flex flex-col text-left">
+        <label htmlFor='email_login'>Email:</label>
+        <input className="bg-[#0F3B57]/10 rounded-lg" name='email_login' type="email" required />
+      </div>
 
-      <label>Email:</label>
-      <input type="email" required />
+      <div className="w-full flex-1 flex flex-col text-left">
+          <label htmlFor='senha_login'>Senha:</label>
+          <input type="password" className="bg-[#0F3B57]/10 w-full rounded-lg" name='senha_login' required />
+      </div>
 
-      <br /><br />
+      <br />
 
-      <label>Senha:</label>
-      <input type="password" required />
-
-      <br /><br />
-
-      <button type="submit" className='mt-[2.5rem]'>Login</button>
+      <button type="submit" className='mt-[3rem] bg-gradient-to-tr from-[#0F3B57] from-20% to-[#1b5477] to-80% text-white font-bold rounded-xl py-1.5 w-[95%]'>Login</button>
     </form>
   );
 }
 
 function CadastroForm() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const form = e.currentTarget;
+
+    const name = form.nome_cadastro.value.trim();
+    const email = form.email_cadastro.value.trim();
+    const password = form.senha_cadastro.value;
+
+    const payload = {
+      name,
+      email,
+      password
+    };
+
+    const res = await fetch("http://localhost:5000/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => null);
+      console.log("ERRO DO BACKEND:", error);
+      alert(JSON.stringify(error, null, 2));
+      return;
+    }
+
+    const loginRes = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!loginRes.ok) {
+      alert("Conta criada, mas falha ao autenticar automaticamente.");
+      navigate("/login");
+      return;
+    }
+
+    const loginData = await loginRes.json();
+
+    login(loginData.access_token, loginData.user);
+
+    navigate("/account");
+
+  }
   return (
-    <form className="flex flex-col justify-center items-center gap-4 w-full">
+    <form className="flex flex-col justify-center items-center gap-4 w-full" onSubmit={handleRegister}>
       <br />
       <div className="w-full flex flex-col text-left">
-        <label>Nome:</label>
-        <input type="text" className="bg-[#0F3B57]/10 rounded-lg" required />
+        <label htmlFor='nome_cadastro'>Nome:</label>
+        <input type="text" className="bg-[#0F3B57]/10 rounded-lg" name='nome_cadastro' required />
       </div>
 
       <div className="w-full flex flex-row gap-4">
         <div className="flex-1 flex flex-col text-left">
-          <label>Email:</label>
-          <input type="email" className="bg-[#0F3B57]/10 w-full rounded-lg" required />
+          <label htmlFor='email_cadastro'>Email:</label>
+          <input type="email" className="bg-[#0F3B57]/10 w-full rounded-lg" name='email_cadastro' required />
         </div>
 
         <div className="flex-1 flex flex-col text-left">
-          <label>Senha:</label>
-          <input type="password" className="bg-[#0F3B57]/10 w-full rounded-lg" required />
+          <label htmlFor='senha_cadastro'>Senha:</label>
+          <input type="password" className="bg-[#0F3B57]/10 w-full rounded-lg" name='senha_cadastro' required />
         </div>
       </div>
 
       <div className="w-full flex flex-row gap-4">
         <div className="flex-1 flex flex-col text-left">
-          <label>Cargo:</label>
-          <input type="text" className="bg-[#0F3B57]/10 w-full rounded-lg" required />
+          <label htmlFor='cargo_cadastro'>Cargo/Função:</label>
+          <input type="text" className="bg-[#0F3B57]/10 w-full rounded-lg" id='cargo_cadastro' />
         </div>
 
         <div className="flex-1 flex flex-col text-left">
-          <label>Telefone:</label>
-          <input type="tel" className="bg-[#0F3B57]/10 w-full rounded-lg" required />
+          <label htmlFor='telefone_cadastro'>Telefone:</label>
+          <input type="tel" className="bg-[#0F3B57]/10 w-full rounded-lg" id='telefone_cadastro' />
         </div>
       </div>
 
-      <button type="submit" className="mt-10">Cadastrar</button>
+      <button type="submit" className="mt-[1.4rem] bg-gradient-to-tr from-[#0F3B57] from-20% to-[#1b5477] to-80% text-white font-bold rounded-xl py-1.5 w-[90%]">Cadastrar</button>
     </form>
   );
 }
