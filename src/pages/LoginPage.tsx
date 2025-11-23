@@ -129,6 +129,10 @@ function CadastroForm() {
     const email = form.email_cadastro.value.trim();
     const password = form.senha_cadastro.value;
 
+    const cargo = form.cargo_cadastro.value.trim();
+    const telefone = form.telefone_cadastro.value.trim();
+
+
     const payload = {
       name,
       email,
@@ -162,7 +166,12 @@ function CadastroForm() {
 
     const loginData = await loginRes.json();
 
-    login(loginData.access_token, loginData.user);
+    login(loginData.access_token, {
+      ...loginData.user,
+      role: cargo,
+      phone: telefone
+  });
+
 
     navigate("/account");
 

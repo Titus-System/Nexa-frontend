@@ -4,7 +4,8 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role_name?: string;
+  role?: string;
+  phone?: string;
 }
 
 // Tipos para o contexto de autenticação

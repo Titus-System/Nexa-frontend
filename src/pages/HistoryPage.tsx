@@ -243,7 +243,7 @@ const HistoryPage: React.FC = () => {
         <div className="flex flex-row px-10 items-center justify-between">
           <div className="w-[50%] relative" ref={filterRef}>
             <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5" onClick={() => !selectedFilterInput && setShowFiltersInput(true) }>
-            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-3xl"/>
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="text-3xl cursor-pointer"/>
             {selectedFilterInput && (
               <div className="flex items-center bg-[#F2F0EB] text-[#0F3B57] rounded-full px-3 py-1 text-sm font-medium">
                 {selectedFilterInput}

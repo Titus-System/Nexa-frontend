@@ -65,9 +65,9 @@ const ClassificationResult: React.FC = () => {
     <div className="p-6 flex flex-col items-center justify-center min-h-screen">
       <div className="mb-8 mt-24">
         <div className="flex flex-row items-center justify-center gap-5">
-          <button className="bg-[#0F3B57] mb-[3%] rounded-[100%] py-2 px-1.5 flex justify-center items-center">
+          <a className="bg-[#0F3B57] mb-[3%] rounded-[100%] py-2 px-1.5 flex justify-center items-center" href="/classification">
             <FontAwesomeIcon icon={faArrowLeft} className="text-white text-3xl" />
-          </button>
+          </a>
           <h1 className="text-4xl font-bold mb-4 text-[#010A26]">Resultados da Análise</h1>
         </div>
       </div>

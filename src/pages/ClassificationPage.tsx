@@ -185,7 +185,7 @@ const SubmitPage: React.FC = () => {
               <div className="flex justify-end gap-4">
                 <button
                   type="reset"
-                  className="rounded-lg font-medium text-base border-1 py-2 px-4 border-[#0F3B57] cursor-pointer"
+                  className={`rounded-lg font-medium text-base border-1 py-2 px-4 border-[#0F3B57] ${darkMode ? "bg-[#0F3B57] text-white" : ""} cursor-pointer`}
                 >
                   Limpar dados
                 </button>

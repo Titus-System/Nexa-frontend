@@ -7,11 +7,13 @@ import TaskService from "../services/taskServices";
 import type Task from "../types/task";
 import ClassificationCard from "./ClassificationCard";
 import { downloadExcelByTask } from "../services/downloadExcelService";
+import { useTheme } from "../context/ThemeContext";
 
 export default function BatchSuccessView(batchResult: BatchDoneData) {
     const navigate = useNavigate();
     const service = new TaskService();
     const [taskData, setTaskData] = useState<Task>();
+    const { darkMode } = useTheme();
 
     useEffect(() => {
         const fetchTask = async () => {
@@ -38,7 +40,7 @@ export default function BatchSuccessView(batchResult: BatchDoneData) {
                 alt="icone_sucesso"
                 className="w-16 mx-auto mb-8"
             />
-            <h2 className="text-2xl font-bold text-[#010A26]">
+            <h2 className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#010A26]"}`}>
                 Classificação em Lote Concluída
             </h2>
             <p className="text-lg text-gray-700 mb-8">{batchResult.message}</p>

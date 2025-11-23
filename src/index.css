@@ -9,7 +9,11 @@ html, body {
   background-color: #010A26;
 }
 
-h1, button {
+.dark-mode html, .dark-mode body{
+  background-color: #010A26;
+}
+
+ h1, button {
     font-family: "Montserrat", sans-serif;
 }
 
