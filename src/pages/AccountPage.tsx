@@ -100,7 +100,7 @@ const AccountPage: React.FC = () => {
             <div className="mt-[3.5rem]">
                 <img src="/banner_account.jpeg" alt="banner_account" className="w-full" />
                 <div className="flex flex-col mb-6">
-                    <div className="absolute top-[20.5rem] left-[5rem] w-40 h-40 p-7 rounded-full bg-white shadow-lg flex items-center justify-center text-7xl font-bold text-[#082640] border-4 border-white">
+                    <div className="absolute top-[26%] left-[5rem] w-40 h-40 p-7 rounded-full bg-white shadow-lg flex items-center justify-center text-7xl font-bold text-[#082640] border-4 border-white">
                         {initials}
                     </div>
                     <div className="flex flex-col">
