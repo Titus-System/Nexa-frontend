@@ -206,7 +206,11 @@ const AccountPage: React.FC = () => {
                             <div className="flex flex-col gap-4">
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3">
-                                    {darkMode ? <img src="/check-circle.svg" alt="icone_sucesso" className="w-[1.8rem]" /> : <img src="/check-circle-white.png" alt="icone_sucesso_branco" className="w-[1.8rem]" /> }
+                                    <img
+                                        src={darkMode ? "/check-circle-white.png" : "/check-circle.svg"}
+                                        alt="icone_sucesso"
+                                        className="w-[1.8rem]"
+                                    />
                                     <span className={`${darkMode ? "text-white" : "text-[#182039]"}`}>Sucesso</span>
                                 </div>
                                 <span className="text-[#19A603]">{statusMonth.done}</span>
