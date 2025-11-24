@@ -165,22 +165,26 @@ const AccountPage: React.FC = () => {
                             <div className="flex flex-col gap-4">
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3">
-                                    {darkMode ? <img src="/check-circle.svg" alt="icone_sucesso" className="w-[1.8rem]" /> : <img src="/check-circle-white.png" alt="icone_sucesso_branco" className="w-[1.8rem]" /> }
+                                    <img
+                                        src={darkMode ? "/check-circle-white.png" : "/check-circle.svg"}
+                                        alt="icone_sucesso"
+                                        className="w-[1.8rem]"
+                                    />
                                     <span className={`${darkMode ? "text-white" : "text-[#182039]"}`}>Sucesso</span>
                                 </div>
                                 <span className="text-[#19A603]">{statusAll.done}</span>
                             </div>
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3 items-center">
-                                    <FontAwesomeIcon icon={faCircleExclamation} className={`text-[1.8rem] ${darkMode ? "text-[#182039]" : "text-white"}`}/>
+                                    <FontAwesomeIcon icon={faCircleExclamation} className={`text-[1.8rem] ${darkMode ? "text-white" : "text-black"}`}/>
                                     <span className={`${darkMode ? "text-white" : "text-[#182039]"}`}>Falha</span>
                                 </div>
                                 <span className="text-[#BF0F0F]">{statusAll.failed}</span>
                             </div>
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3 items-center">
-                                    <FontAwesomeIcon icon={faSpinner} className={`text-[1.8rem] ${darkMode ? "text-[#182039]" : "text-white"}`}/>
-                                    <span className={`${darkMode ? "text-[#182039]" : "text-white"}`}>Em andamento</span>
+                                    <FontAwesomeIcon icon={faSpinner} className={`text-[1.8rem] ${darkMode ? "text-white" : "text-black"}`}/>
+                                    <span className={`${darkMode ? "text-white" : "text-[#182039]"}`}>Em andamento</span>
                                 </div>
                                 <span className={`${darkMode ? "text-white" : "text-[#0E3C56]"}`}>{statusAll.processing}</span>
                             </div>
@@ -209,14 +213,14 @@ const AccountPage: React.FC = () => {
                             </div>
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3 items-center">
-                                    <FontAwesomeIcon icon={faCircleExclamation} className={`text-[1.8rem] ${darkMode ? "text-[#182039]" : "text-white"}`}/>
+                                    <FontAwesomeIcon icon={faCircleExclamation} className={`text-[1.8rem] ${darkMode ? " text-white" : "text-black"}`}/>
                                     <span className={`${darkMode ? "text-white" : "text-[#182039]"}`}>Falha</span>
                                 </div>
                                 <span className="text-[#BF0F0F]">{statusMonth.failed}</span>
                             </div>
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3 items-center">
-                                    <FontAwesomeIcon icon={faSpinner} className={`text-[1.8rem] ${darkMode ? "text-[#182039]" : "text-white"}`}/>
+                                    <FontAwesomeIcon icon={faSpinner} className={`text-[1.8rem] ${darkMode ? "text-white" : "text-black"}`}/>
                                     <span className={`${darkMode ? "text-white" : "text-[#182039]"}`}>Em andamento</span>
                                 </div>
                                 <span className={`${darkMode ? "text-white" : "text-[#0E3C56]"}`}>{statusMonth.processing}</span>
