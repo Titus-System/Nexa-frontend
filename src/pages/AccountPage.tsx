@@ -153,7 +153,7 @@ const AccountPage: React.FC = () => {
                         <div className={`rounded-lg py-10 px-6 ${darkMode ? "bg-[#182039]" : "bg-[#F5F5F5]"}`}>
                             <div className="flex flex-col gap-0 mb-7">
                                 <h3 className={`font-semibold ${darkMode ? "text-white" : "text-[#082640]"} text-2xl mb-2 text-left pb-0`}>Geral</h3>
-                                <hr/>
+                                <hr className={`${darkMode ? "text-white" : "text-[#082640]"}`}/>
                             </div>
                             <div className="flex flex-col items-center mb-7">
                                 <span className={`text-6xl font-bold ${darkMode ? "text-white" : "text-[#082640]"}`}>{statusAll.total}</span>
@@ -194,7 +194,7 @@ const AccountPage: React.FC = () => {
                             <div className={`rounded-lg py-10 px-6 ${darkMode ? "bg-[#182039]" : "bg-[#F5F5F5]"}`}>
                             <div className="flex flex-col gap-0 mb-7">
                                 <h3 className={`font-semibold ${darkMode ? "text-white" : "text-[#082640]"} text-2xl mb-2 text-left pb-0`}>Este mês</h3>
-                                <hr/>
+                                <hr className={`${darkMode ? "text-white" : "text-[#082640]"}`}/>
                             </div>
                             <div className="flex flex-col items-center mb-7">
                                 <span className={`text-6xl font-bold ${darkMode ? "text-white" : "text-[#082640]"}`}>{statusMonth.total}</span>
