@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartSimple, faTrashCan, faAngleDown, faDownload, faCircleExclamation, faSpinner, faMagnifyingGlass, faTable, faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { downloadExcelByTask } from "../services/downloadExcelService";
 import { API_URL } from "../config";
+import { useTheme } from "../context/ThemeContext";
 
 const HistoryPage: React.FC = () => {
   const [data, setData] = useState<Task[] | null>(null);
@@ -30,6 +31,7 @@ const HistoryPage: React.FC = () => {
   const optionsFiltersInput = ["Partnumber", "NCM", "Fabricante", "País de origem"];
   const [searchResults, setSearchResults] = useState<Task[] | null>(null);
   const filterRef = useRef<HTMLDivElement | null>(null);
+  const { darkMode } = useTheme();
  
   const handleSelect = (option: string) => {
     setSelectedOption(option);
@@ -187,7 +189,7 @@ const HistoryPage: React.FC = () => {
   return (
     <div className="mb-28">
       <div className="mt-48 mb-24 flex flex-col items-center">
-        <h1 className="text-4xl font-bold mb-4 text-[#010A26]">
+        <h1 className={`text-4xl font-bold mb-4 ${darkMode ? "text-white" : "text-[#010A26]"}`}>
           Histórico de Resultados
         </h1>
         <p className="text-xl text-[#9799A6] w-[60%]">
@@ -200,52 +202,52 @@ const HistoryPage: React.FC = () => {
       {/* Painéis superiores */}
       <div className="flex flex-col gap-12">
         <div className="flex flex-row w-full px-10 justify-center gap-6">
-          <div className="bg-white w-[33%] rounded-lg border border-solid pb-6 border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
+          <div className={`w-[33%] rounded-lg border border-solid pb-6 shadow-[0_0_60px_rgba(0,0,0,0.15)] ${darkMode ? "bg-[#181F39] border-white" : "bg-white border-[#c0c1c9]"}`}>
             <div className="flex flex-row justify-between p-3 items-center">
-              <h2 className="font-semibold text-[#0F3B57] text-2xl">
+              <h2 className={`font-semibold ${darkMode ? "text-white" : "text-[#0F3B57]"} text-2xl`}>
                 Total de Análises:
               </h2>
               <FontAwesomeIcon
                 icon={faChartSimple}
-                className="bg-[#F2F0EB] px-1 py-2 rounded-lg text-2xl text-[#0F3B57]"
+                className={`px-1 py-2 rounded-lg text-2xl ${darkMode ? "bg-[#364061] text-white" : "bg-[#F2F0EB] text-[#0F3B57]"}`}
               />
             </div>
             <div className="flex flex-row justify-start px-4 mt-3">
-            <span className="text-3xl font-bold text-[#010A26]">{tasksCount}</span>
+            <span className={`text-3xl font-bold ${darkMode ? "text-white" : "text-[#010A26]"}`}>{tasksCount}</span>
             </div>
           </div>
-          <div className="bg-white w-[33%] rounded-lg border border-solid pb-6 border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
+          <div className={`w-[33%] rounded-lg border border-solid pb-6 shadow-[0_0_60px_rgba(0,0,0,0.15)] ${darkMode ? "bg-[#181F39] border-white" : "bg-white border-[#c0c1c9]"}`}>
             <div className="flex flex-row justify-between p-3 items-center">
-              <h2 className="font-semibold text-[#0F3B57] text-2xl">
+              <h2 className={`font-semibold ${darkMode ? "text-white" : "text-[#0F3B57]"} text-2xl`}>
                 Total de PartNumbers:
               </h2>
               <FontAwesomeIcon
                 icon={faTable}
-                className="bg-[#F2F0EB] px-1 py-2 rounded-lg text-2xl text-[#0F3B57]"
+                className={`px-1 py-2 rounded-lg text-2xl ${darkMode ? "bg-[#364061] text-white" : "bg-[#F2F0EB] text-[#0F3B57]"}`}
               />
             </div>
             <div className="flex flex-row justify-start px-4 mt-3">
-              <span className="text-3xl font-bold text-[#010A26]">{classificationsCount}</span>
+              <span className={`text-3xl font-bold ${darkMode ? "text-white" : "text-[#010A26]"}`}>{classificationsCount}</span>
             </div>
           </div>
-          <div className="bg-white w-[33%] rounded-lg border border-solid pb-6 border-[#c0c1c9] shadow-[0_0_60px_rgba(0,0,0,0.15)]">
+          <div className={`w-[33%] rounded-lg border border-solid pb-6 shadow-[0_0_60px_rgba(0,0,0,0.15)] ${darkMode ? "bg-[#181F39] border-white" : "bg-white border-[#c0c1c9]"}`}>
             <div className="flex flex-row justify-between p-3 items-center">
-              <h2 className="font-semibold text-[#0F3B57] text-2xl">
+              <h2 className={`font-semibold ${darkMode ? "text-white" : "text-[#0F3B57]"} text-2xl`}>
                 Período das Análises:
               </h2>
-              <FontAwesomeIcon icon={faCalendarDays} className="bg-[#F2F0EB] px-1 py-2 rounded-lg text-2xl text-[#0F3B57]"/>
+              <FontAwesomeIcon icon={faCalendarDays} className={`px-1 py-2 rounded-lg text-2xl ${darkMode ? "bg-[#364061] text-white" : "bg-[#F2F0EB] text-[#0F3B57]"}`}/>
             </div>
             <div className="flex flex-row justify-start px-4 mt-3">
-              <span className="text-3xl font-bold text-[#010A26]">{oldestDate} - {newestDate}</span>
+              <span className={`text-3xl font-bold ${darkMode ? "text-white" : "text-[#010A26]"}`}>{oldestDate} - {newestDate}</span>
             </div>
           </div>
         </div>
         <div className="flex flex-row px-10 items-center justify-between">
           <div className="w-[50%] relative" ref={filterRef}>
-            <div className="flex flex-row bg-white rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5" onClick={() => !selectedFilterInput && setShowFiltersInput(true) }>
+            <div className={`flex flex-row rounded-full items-center py-4 pl-4 pr-[4.2rem] gap-5 ${darkMode ? "placeholder-[#90929c] bg-transparent" : "bg-white"}`} onClick={() => !selectedFilterInput && setShowFiltersInput(true) }>
             <FontAwesomeIcon icon={faMagnifyingGlass} className="text-3xl cursor-pointer"/>
             {selectedFilterInput && (
-              <div className="flex items-center bg-[#F2F0EB] text-[#0F3B57] rounded-full px-3 py-1 text-sm font-medium">
+              <div className={`flex items-center rounded-full px-3 py-1 text-sm font-medium ${darkMode ? "text-white bg-[#364061]" : "bg-[#F2F0EB] text-[#0F3B57]"}`}>
                 {selectedFilterInput}
                 <button
                   onClick={handleRemoveFilter}
@@ -258,12 +260,12 @@ const HistoryPage: React.FC = () => {
             <input type="text" className="text-[#9799A6] text-[1.1rem] w-[100%] border-none focus:outline-none focus:ring-0" placeholder="Buscar por Part Number, fabricante, NCM..." value={inputValue} onChange={(e) => setInputValue(e.target.value)} disabled={!selectedFilterInput}></input>
           </div>
           {showFiltersInput && !selectedFilterInput && (
-        <div className="absolute top-full left-0 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-md z-10">
+        <div className={`absolute top-full left-0 w-full mt-2 border-1 rounded-xl shadow-md z-10 ${darkMode ? "bg-[#364061] border-[#414d72]" : "bg-white border-gray-200"}`}>
           {optionsFiltersInput.map((filtro) => (
             <button
               key={filtro}
               onClick={() => handleSelectFilterInput(filtro)}
-              className="w-full text-left px-4 py-2 hover:bg-[#F2F0EB] text-[#0F3B57]"
+              className={`w-full text-left px-4 py-2 ${darkMode ? "text-white" : "text-[#0F3B57] hover:bg-[#F2F0EB]"}`}
             >
               {filtro}
             </button>
@@ -277,7 +279,7 @@ const HistoryPage: React.FC = () => {
             <div>
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 bg-white text-[#0F3B57] font-semibold px-6 py-3 rounded-lg shadow hover:bg-[#f7f7f7] transition"
+                className={`flex items-center gap-2 font-semibold px-6 py-3 rounded-lg shadow transition ${darkMode ? "bg-[#364061] text-white" : "hover:bg-[#f7f7f7] text-[#0F3B57] bg-white"}`}
               >
                 {selectedOption}
                 <FontAwesomeIcon
