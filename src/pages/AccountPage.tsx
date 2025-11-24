@@ -166,21 +166,21 @@ const AccountPage: React.FC = () => {
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3">
                                     {darkMode ? <img src="/check-circle.svg" alt="icone_sucesso" className="w-[1.8rem]" /> : <img src="/check-circle-white.png" alt="icone_sucesso_branco" className="w-[1.8rem]" /> }
-                                    <span>Sucesso</span>
+                                    <span className={`${darkMode ? "text-[#182039]" : "text-white"}`}>Sucesso</span>
                                 </div>
                                 <span className="text-[#19A603]">{statusAll.done}</span>
                             </div>
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3 items-center">
                                     <FontAwesomeIcon icon={faCircleExclamation} className={`text-[1.8rem] ${darkMode ? "text-[#182039]" : "text-white"}`}/>
-                                    <span>Falha</span>
+                                    <span className={`${darkMode ? "text-[#182039]" : "text-white"}`}>Falha</span>
                                 </div>
                                 <span className="text-[#BF0F0F]">{statusAll.failed}</span>
                             </div>
                             <div className={`flex flex-row justify-between px-6 py-3 rounded-lg border-1 border-[#aeb0b5] ${darkMode ? "bg-[#182039]" : "bg-white"}`}>
                                 <div className="flex flex-row gap-3 items-center">
                                     <FontAwesomeIcon icon={faSpinner} className={`text-[1.8rem] ${darkMode ? "text-[#182039]" : "text-white"}`}/>
-                                    <span>Em andamento</span>
+                                    <span className={`${darkMode ? "text-[#182039]" : "text-white"}`}>Em andamento</span>
                                 </div>
                                 <span className={`${darkMode ? "text-white" : "text-[#0E3C56]"}`}>{statusAll.processing}</span>
                             </div>

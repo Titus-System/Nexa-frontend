@@ -1,3 +1,4 @@
+import { useTheme } from "../context/ThemeContext";
 interface ProgressBarProps {
   label: string;
   value: number;      // quantidade DONE
@@ -6,13 +7,14 @@ interface ProgressBarProps {
 
 export default function ProgressBar({ label, value, total }: ProgressBarProps) {
   const percent = total === 0 ? 0 : (value / total) * 100;
+  const { darkMode } = useTheme();
 
   return (
     <div className="flex flex-col gap-2 w-full">
       {/* Label + porcentagem */}
       <div className="flex justify-between items-center">
-        <span className="font-semibold text-[#082640]">{label}</span>
-        <span className="font-bold text-[#082640]">
+        <span className={`font-semibold ${darkMode ? "text-white" : "text-[#082640]"}`}>{label}</span>
+        <span className={`font-bold ${darkMode ? "text-white" : "text-[#082640]"}`}>
           {percent.toFixed(1)}%
         </span>
       </div>
